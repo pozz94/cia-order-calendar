@@ -1,0 +1,66 @@
+:root {
+	--table-head-height: 2.5rem;
+}
+
+.wrapper {
+	position: relative;
+	margin: auto;
+	width: fit-content;
+	width: -moz-fit-content;
+	height: 100%;
+	overflow: auto;
+	border-radius: 0.5rem;
+	box-shadow: var(--shadow);
+}
+
+.stickyhead {
+	position: absolute;
+	top: 0;
+	z-index: 1;
+	width: 100%;
+	height: var(--table-head-height);
+	margin-bottom: calc(-1 * var(--table-head-height));
+	background: var(--main-gradient);
+}
+
+.wrapper .scrollTrack {
+	height: calc(100% - var(--table-head-height) - 0.3rem);
+	top: auto;
+	bottom: 0.15rem;
+}
+
+table {
+	text-align: left;
+	position: relative;
+	border-collapse: collapse;
+	border-radius: 0.5rem;
+}
+th,
+td {
+	padding: 0.5rem 1rem;
+	min-width: 3rem;
+}
+thead {
+	position: relative;
+	top: 0;
+	z-index: 2;
+}
+
+tbody tr {
+	border-top: 1px solid lightgray;
+}
+
+tbody tr:nth-child(odd) {
+	background: #eee;
+}
+
+th {
+	text-align: left;
+	height: var(--table-head-height);
+	line-height: calc(var(--table-head-height) - 1rem);
+	color: var(--light-text);
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	white-space: nowrap;
+}
