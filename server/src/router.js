@@ -29,29 +29,29 @@ const router = routesPath => {
 				//Serve index files as father dir. Also removes empty items just to be safe
 				.filter(dir => dir !== "index" && dir != "");
 
-			return {
-				file: routesPath + "/" + route.replace(/[\\\/]/g, "/"),
-				url: "/" + urlSections.join("/"),
-				urlSections
-			};
+			if (!urlSections.includes("scripts")) {
+				return {
+					file: routesPath + "/" + route.replace(/[\\\/]/g, "/"),
+					url: "/" + urlSections.join("/"),
+					urlSections
+				};
+			}
 		})
+		.filter(element => element != null)
 		.sort(({urlSections: a}, {urlSections: b}) => {
 			for (let i = 0, value; i < a.length && i < b.length; i++) {
-				const params = [a, b].map(t => (t[i].startsWith(":") ? 1 : 0)).reduce((a,b)=>a-b);
-				const regex = [a, b].map(t => (t[i].match(/^:\w+\(\S*\)$/) ? 1 : 0)).reduce((a, b) => a - b);
-				value = params - (regex * 0.1)
+				const params = [a, b].map(t => (t[i].startsWith(":") ? 1 : 0)).reduce((a, b) => a - b);
+				const regex = [a, b]
+					.map(t => (t[i].match(/^:\w+\(\S*\)$/) ? 1 : 0))
+					.reduce((a, b) => a - b);
+				value = params - regex * 0.1;
 				if (value) return value;
 			}
 			return a.length - b.length;
 		})
 		.forEach(({url, file}) => {
 			//Here it states what it is trying to do
-			console.log(
-				"\x1b[36m[router] Serving\x1b[35m",
-				url,
-				"\x1b[36mfrom\x1b[35m",
-				file
-			);
+			console.log("\x1b[36m[router] Serving\x1b[35m", url, "\x1b[36mfrom\x1b[35m", file);
 			//mount the route
 			try {
 				//pass params to req.vars since req.params don't work

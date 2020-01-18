@@ -14,32 +14,17 @@ router.post("/", async (req, res, next) => {
 	const generator = async (query, startingUrl = null, obj = null) => {
 		try {
 			if (startingUrl) {
-				obj = await getJson(req.rootUrl + startingUrl).catch(e =>
-					console.log(
-						"[bundler] Error while getting",
-						req.rootUrl + startingUrl,
-						":\n",
-						e
-					)
+				obj = await getJson(req.rootUrl + startingUrl).catch(error =>
+					console.log("[bundler] Error while getting", req.rootUrl + startingUrl, ":\n", error)
 				);
 			}
 
-			if (
-				obj &&
-				obj["@self"] &&
-				obj["@self"].type &&
-				obj["@self"].type === "collection"
-			) {
+			if (obj && obj["@self"] && obj["@self"].type && obj["@self"].type === "collection") {
 				return {
 					...obj,
 					collection: await Promise.all(
-						obj.collection.map(
-							async item =>
-								await generator(query, item.replace(req.rootUrl, ""))
-						)
-					).catch(e =>
-						console.log("[bundler] Error while populating collection:", e)
-					)
+						obj.collection.map(async item => await generator(query, item.replace(req.rootUrl, "")))
+					).catch(error => console.log("[bundler] Error while populating collection:", error))
 				};
 			}
 
@@ -48,15 +33,11 @@ router.post("/", async (req, res, next) => {
 			switch (queryType) {
 				case "array":
 					return {
-						"@self":
-							obj["@self"] || "error @self not defined or object doesn't exist",
+						"@self": obj["@self"] || "error @self not defined or object doesn't exist",
 						...(await query
 							.map(async subQuery => await generator(subQuery, null, obj))
 							.reduce(async (a, b) => {
-								return {
-									...(await a),
-									...(await b)
-								};
+								return {...(await a), ...(await b)};
 							}))
 					};
 				case "object":
@@ -77,10 +58,7 @@ router.post("/", async (req, res, next) => {
 							};
 						})
 						.reduce(async (a, b) => {
-							return {
-								...(await a),
-								...(await b)
-							};
+							return {...(await a), ...(await b)};
 						});
 				case "string":
 					return {
