@@ -1,0 +1,26 @@
+// Generated automatically by nearley, version 2.19.1
+// http://github.com/Hardmath123/nearley
+(function () {
+function id(x) { return x[0]; }
+var grammar = {
+    Lexer: undefined,
+    ParserRules: [
+    {"name": "generator", "symbols": ["_", {"literal":"{"}, "elements", {"literal":"}"}, "_"]},
+    {"name": "elements", "symbols": ["_", "element", "_"]},
+    {"name": "elements", "symbols": ["_", "element", "_", {"literal":","}, "elements"]},
+    {"name": "element", "symbols": ["string"]},
+    {"name": "element", "symbols": ["object"]},
+    {"name": "string", "symbols": [/[a-zA-Z0-9]/]},
+    {"name": "object", "symbols": ["string", {"literal":":"}, "generator"]},
+    {"name": "_$ebnf$1", "symbols": []},
+    {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", {"literal":" "}], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "_", "symbols": ["_$ebnf$1"]}
+]
+  , ParserStart: "generator"
+}
+if (typeof module !== 'undefined'&& typeof module.exports !== 'undefined') {
+   module.exports = grammar;
+} else {
+   window.grammar = grammar;
+}
+})();

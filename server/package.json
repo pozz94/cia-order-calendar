@@ -5,14 +5,14 @@
 	"scripts": {
 		"start": "npm run prod",
 		"server": "babel-node ./src/bin/www",
-		"server:dev": "npm build:grammar  && babel-node ./src/bin/dev",
+		"server:dev": "babel-node ./src/bin/dev",
 		"server:prod": "node ./dist/bin/www",
-		"dev": "SET NODE_ENV=development& npm-run-all server:dev",
+		"dev": "npm run build:grammar & SET NODE_ENV=development& npm-run-all server:dev",
 		"clean": "rimraf dist",
-		"build": "npm build:grammar  && babel ./src --out-dir dist",
-		"build:grammar": "nearleyc ./src/routes/bundler/scripts/object.ne -o nearleyc ./src/routes/bundler/scripts/object.js",
+		"build": "npm run build:grammar & babel ./src --out-dir dist",
+		"build:grammar": "nearleyc ./src/routes/bundler/scripts/grammar.ne -o ./src/routes/bundler/scripts/grammar.js",
 		"prod": "SET NODE_ENV=production& npm-run-all clean build server:prod",
-		"watch": "nodemon"
+		"watch": "nodemon -i src/routes/bundler/scripts/grammar.js"
 	},
 	"dependencies": {
 		"@babel/plugin-proposal-class-properties": "^7.5.5",

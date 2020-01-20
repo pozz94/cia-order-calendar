@@ -1,5 +1,7 @@
 import express from "express";
 import {getJson} from "fetchUtils";
+import nearley from "nearley";
+import grammar from "./scripts/grammar.js";
 
 const router = express.Router();
 
@@ -72,6 +74,13 @@ router.post("/", async (req, res, next) => {
 			console.log("[bundler] Error while populating ", query, ":", error);
 		}
 	};
+
+	const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
+
+	parser.feed(`[href:"${req.rootUrl + req.body.url}", nome:"mo", range:"0-1"]{name}`);
+
+	console.log(JSON.stringify(parser.results[0], null, 2));
+
 	res.json(await generator(req.body.query, req.body.url));
 });
 
