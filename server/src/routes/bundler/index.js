@@ -78,13 +78,17 @@ router.post("/", async (req, res, next) => {
 	const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
 	parser.feed(`
-		[href:"${req.rootUrl + req.body.url}", nome:"mo", range:"0-1"]{
-			name, 
-			asf:{
-				red
+		[
+			href:"${req.rootUrl + req.body.url}",
+			nome:"mo",
+			range:"0-1"
+		]{
+			1string, 
+			1obj:{
+				2string
 			}, 
-			qwe:{
-				asd
+			2obj:{
+				3string
 			}
 		}
 		`);

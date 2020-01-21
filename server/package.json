@@ -7,15 +7,14 @@
 		"server": "babel-node ./src/bin/www",
 		"server:dev": "babel-node ./src/bin/dev",
 		"server:prod": "node ./dist/bin/www",
-		"dev": "npm run build:grammar & SET NODE_ENV=development& npm-run-all server:dev",
+		"dev": "npm run build:grammar & SET NODE_ENV=development& npm run server:dev",
 		"clean": "rimraf dist",
 		"build": "npm run build:grammar & babel ./src --out-dir dist",
 		"build:grammar": "nearleyc ./src/routes/bundler/scripts/grammar.ne -o ./src/routes/bundler/scripts/grammar.js",
 		"prod": "SET NODE_ENV=production& npm-run-all clean build server:prod",
-		"watch": "nodemon -i src/routes/bundler/scripts/grammar.js"
+		"watch": "nodemon"
 	},
 	"dependencies": {
-		"@babel/plugin-proposal-class-properties": "^7.5.5",
 		"cookie-parser": "~1.4.4",
 		"debug": "~2.6.9",
 		"express": "~4.16.1",
@@ -25,14 +24,14 @@
 		"nearley": "^2.19.1",
 		"node-fetch": "^2.6.0",
 		"npm-run-all": "^4.1.5",
-		"rimraf": "^3.0.0",
-		"sse-broadcast": "^0.5.2"
+		"rimraf": "^3.0.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.6.4",
 		"@babel/core": "^7.6.4",
 		"@babel/node": "^7.6.3",
 		"@babel/preset-env": "^7.6.3",
+		"@babel/plugin-proposal-class-properties": "^7.5.5",
 		"nodemon": "^1.19.3",
 		"prettier": "^1.19.1"
 	}
