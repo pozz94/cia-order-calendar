@@ -2,14 +2,6 @@
 // http://github.com/Hardmath123/nearley
 (function () {
 function id(x) { return x[0]; }
-
-    let obj;
-    const getJson = require("fetchUtils").getJson;
-    let elements=0;
-    let string=0;
-    let object=0;
-    let gen=0;
-    let trueElements=0
 var grammar = {
     Lexer: undefined,
     ParserRules: [
@@ -47,24 +39,30 @@ var grammar = {
     {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
     {"name": "gen$ebnf$1", "symbols": ["options"], "postprocess": id},
     {"name": "gen$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "gen", "symbols": ["_", "gen$ebnf$1", {"literal":"{"}, "_", "elements", "_", {"literal":"}"}, "_"], "postprocess": data=>{ return [...data[4], data[1]||null]; }},
-    {"name": "options", "symbols": ["_", {"literal":"["}, "_", "opts", "_", {"literal":"]"}, "_"], "postprocess": 
-        data=>data[3].filter(i=>i!==null)
+    {"name": "gen", "symbols": ["_", "gen$ebnf$1", {"literal":"{"}, "_", "elements", "_", {"literal":"}"}, "_"], "postprocess": 
+        data => {
+            const options = (data[1] && data[1].filter(i => i !== null))?{options: data[1]}:null
+            return {
+                data: data[4],
+                ...options
+            };
+        }
         },
-    {"name": "opts", "symbols": ["opt", "_", {"literal":","}, "_", "opts"], "postprocess": data=>[data[0], ...data[4]]},
+    {"name": "options", "symbols": ["_", {"literal":"["}, "_", "opts", "_", {"literal":"]"}, "_"], "postprocess": data => data[3].filter(i => i !== null)},
+    {"name": "opts", "symbols": ["opt", "_", {"literal":","}, "_", "opts"], "postprocess": data => [data[0], ...data[4]]},
     {"name": "opts", "symbols": ["opt"]},
     {"name": "opt$subexpression$1", "symbols": ["dqstring"]},
     {"name": "opt$subexpression$1", "symbols": ["sqstring"]},
     {"name": "opt$subexpression$1", "symbols": ["btstring"]},
-    {"name": "opt", "symbols": ["string", "_", {"literal":":"}, "_", "opt$subexpression$1"], "postprocess": data=>{return {key:data[0], value:data[4][0]};}},
-    {"name": "elements", "symbols": ["element", "_", {"literal":","}, "_", "elements"], "postprocess": data=>[data[0], ...data[4]]},
+    {"name": "opt", "symbols": ["string", "_", {"literal":":"}, "_", "opt$subexpression$1"], "postprocess": data => {return {key:data[0], value:data[4][0]};}},
+    {"name": "elements", "symbols": ["element", "_", {"literal":","}, "_", "elements"], "postprocess": data => [data[0], ...data[4]]},
     {"name": "elements", "symbols": ["element"]},
     {"name": "element", "symbols": ["string"], "postprocess": id},
     {"name": "element", "symbols": ["object"], "postprocess": id},
     {"name": "string$ebnf$1", "symbols": [/[a-zA-Z0-9]/]},
     {"name": "string$ebnf$1", "symbols": ["string$ebnf$1", /[a-zA-Z0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "string", "symbols": ["string$ebnf$1"], "postprocess": data => data[0].join("")},
-    {"name": "object", "symbols": ["string", "_", {"literal":":"}, "_", "gen"], "postprocess": data => { return {[data[0]]:data[4].filter(i=>i!==null)}}}
+    {"name": "object", "symbols": ["string", "_", "gen"], "postprocess": data => {return {[data[0]]:data[2]}}}
 ]
   , ParserStart: "gen"
 }
