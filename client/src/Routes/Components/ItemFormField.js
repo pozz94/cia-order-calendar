@@ -33,11 +33,11 @@ class AddDDT extends Component {
 
 	addNextItemIfComplete = () => {
 		if (
-			this.props.value.Ammount &&
-			this.props.value.Model.code &&
-			this.props.value.Model.name &&
-			this.props.value.Color.name &&
-			this.props.value.Date &&
+			this.props.value.ammount &&
+			this.props.value.model.code &&
+			this.props.value.model.name &&
+			this.props.value.color.name &&
+			this.props.value.dueDate &&
 			this.props.isLast
 		)
 			this.props.addNextItem();
@@ -54,8 +54,8 @@ class AddDDT extends Component {
 		return (
 			<div>
 				<input
-					value={value.Ammount || ""}
-					onChange={e => this.setValue("Ammount")(e.target.value)}
+					value={value.ammount || ""}
+					onChange={e => this.setValue("ammount")(e.target.value)}
 					className={c.number}
 					type="number"
 					pattern="[0-9]*"
@@ -63,67 +63,67 @@ class AddDDT extends Component {
 					placeholder="QT"
 					ref={setRef("ammount")}
 					onKeyPress={onEnter(event => {
-						setValue("Ammount")(event.target.value);
+						setValue("ammount")(event.target.value);
 						setFocus("itemCode")();
 					})}
 				/>
 				<InputSuggestion
 					placeholder="Codice Oggetto"
-					value={value.Model}
+					value={value.model}
 					whichProperty={"code"}
 					fetchSuggestionsFrom="/api/models/search/bycode/"
-					setValue={setValue("Model")}
+					setValue={setValue("model")}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("itemName")}
 					inputRef={setRef("itemCode")}
 				/>
 				<InputSuggestion
 					placeholder="Nome Oggetto"
-					value={value.Model}
+					value={value.model}
 					whichProperty={"name"}
 					fetchSuggestionsFrom="/api/models/search/byname/"
-					setValue={setValue("Model")}
+					setValue={setValue("model")}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("color")}
 					inputRef={setRef("itemName")}
 				/>
 				<InputSuggestion
 					placeholder="Colore"
-					value={value.Color}
+					value={value.color}
 					whichProperty={"name"}
 					fetchSuggestionsFrom="/api/colors/search/byname/"
-					setValue={setValue("Color")}
+					setValue={setValue("color")}
 					onSelect={setFocus("date")}
 					onEnter={setFocus("date")}
 					inputRef={setRef("color")}
 				/>
 				<Date
-					value={value.Date}
-					onChange={event => this.setValue("Date")(event.target.value)}
+					value={value.dueDate.slice(0, 10)}
+					onChange={event => this.setValue("dueDate")(event.target.value)}
 					className={c.date}
 					placeholder="Consegna"
 					type={this.state.dateFieldType || "text"}
 					onKeyPress={onEnter(event => {
-						setValue("Date")(event.target.value);
+						setValue("dueDate")(event.target.value);
 						setFocus("ammount")();
 					})}
 					onKeyDown={event => {
 						if (event.keyCode === 9) {
-							setValue("Date")(event.target.value);
+							setValue("dueDate")(event.target.value);
 						}
 					}}
 					inputRef={setRef("date")}
 				/>
 				<input
-					defaultChecked={value.Packaging || false}
-					onChange={event => setValue("Packaging")(event.target.checked)}
+					defaultChecked={value.packaging || false}
+					onChange={event => setValue("packaging")(event.target.checked)}
 					className={c.toggle}
 					type="checkbox"
 					ref={setRef("packaging")}
 				/>
 				<BubblePreset
-					onChange={color => setValue("HighlightColor")(color)}
-					defaultColor={value.HighlightColor || "#fff"}
+					onChange={color => setValue("highlightColor")(color)}
+					defaultColor={value.highlightColor || "#fff"}
 					colors={[
 						"#fdb790",
 						"#fdfa63",
@@ -153,11 +153,7 @@ class AddDDT extends Component {
 						deleteThisItem();
 					}}
 				>
-					<FontAwesomeIcon
-						icon={faTrashAlt}
-						color="#FFFFFF"
-						style={{fontSize: "1.25rem"}}
-					/>
+					<FontAwesomeIcon icon={faTrashAlt} color="#FFFFFF" style={{fontSize: "1.25rem"}} />
 				</button>
 			</div>
 		);

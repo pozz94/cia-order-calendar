@@ -1,11 +1,10 @@
 import React, {Component} from "react";
 import DDTFormField from "./Components/DDTFormField";
 import ItemFormField from "./Components/ItemFormField";
-import { putJson, postJson } from "Utils/fetchUtils"
+import {putJson, postJson} from "Utils/fetchUtils";
 import c from "./AddDDT.module.css";
 
-const hash = () =>
-	[...Array(16)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
+const hash = () => [...Array(16)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
 
 class AddDDT extends Component {
 	state = {
@@ -39,12 +38,12 @@ class AddDDT extends Component {
 			item.Color = await postJson("/api/colors", item.Color);
 			item.Model = await postJson("/api/models", item.Model);
 			item.DDT = ddt;
-			putJson("/api/items", item)
-		})
+			putJson("/api/items", item);
+		});
 	};
 
-	fetchItems = (customer, code, callback = null) => {
-		postJson("/api/bundler", {
+	fetchItems = async (customer, code, callback = null) => {
+		const list = await postJson("/api/bundler", {
 			url: "/items",
 			query: [
 				"id",
@@ -52,56 +51,48 @@ class AddDDT extends Component {
 				"dueDate",
 				"asdfg",
 				"altName",
+				"itemKey",
+				"highlightColor",
 				{
-					"color": [
-						"id",
-						"name"
-					],
-					"ddt": [
+					color: ["id", "name"],
+					ddt: [
 						"code",
+						"date",
 						{
-							"customer": "name"
+							customer: "name"
 						}
 					],
-					"model": [
-						"name",
-						"code"
-					]
+					model: ["name", "code"]
 				}
 			]
-		})
-		fetch(`/api/ddt/${customer}/${code}`)
-			.then(res => res.json())
-			.then(list => {
-				if (!list.error) {
-					this.setState(
-						{
-							ddtData: {...this.state.ddtData, date: list.ddtData.date},
-							Items: list.Items
-						},
-						() => {
-							callback && callback();
-						}
-					);
-				} else {
+		});
+		if (!list.error) {
+			console.log(list);
+			this.setState(
+				{
+					ddtData: {...this.state.ddtData, date: list.collection[0].ddt.date.slice(0, 10)},
+					Items: list.collection
+				},
+				() => {
 					callback && callback();
 				}
-			});
+			);
+		} else {
+			callback && callback();
+		}
 	};
 
 	addItem = () => {
-		let lastItem =
-			(this.state.Items.slice(-1)[0] && this.state.Items.slice(-1)[0].value) ||
-			{};
+		let lastItem = (this.state.Items.slice(-1)[0] && this.state.Items.slice(-1)[0].value) || {};
 		const Items = [
 			...this.state.Items,
 			{
-				Model: {},
-				Color: {},
-				Date: lastItem.Date || "",
-				Packaging: lastItem.Packaging || false,
-				HighlightColor: lastItem.HighlightColor || "#fff",
-				key: hash()
+				model: {},
+				color: {},
+				dueDate: lastItem.date || "",
+				packaging: lastItem.packaging || false,
+				highlightColor: lastItem.highlightColor || "#fff",
+				itemKey: hash()
 			}
 		];
 		this.setState({Items});
@@ -109,7 +100,7 @@ class AddDDT extends Component {
 
 	refreshItem = key => value => {
 		const Items = this.state.Items.map(item => {
-			if (item.key === key) return {...value, key};
+			if (item.itemKey === key) return {...value, key};
 			return item;
 		});
 		this.setState({Items});
@@ -135,16 +126,19 @@ class AddDDT extends Component {
 			{this.state.Items.length ? (
 				<React.Fragment>
 					<hr />
-					{this.state.Items.map((item, index) => (
-						<ItemFormField
-							key={item.key}
-							value={item}
-							addNextItem={this.addItem}
-							deleteThisItem={this.deleteItem(item.key)}
-							refreshThisItem={this.refreshItem(item.key)}
-							isLast={this.state.Items.length - 1 === index}
-						/>
-					))}
+					{this.state.Items.map((item, index) => {
+						console.log(item);
+						return (
+							<ItemFormField
+								key={item.itemKey}
+								value={item}
+								addNextItem={this.addItem}
+								deleteThisItem={this.deleteItem(item.itemKey)}
+								refreshThisItem={this.refreshItem(item.itemKey)}
+								isLast={this.state.Items.length - 1 === index}
+							/>
+						);
+					})}
 					<hr />
 				</React.Fragment>
 			) : (
