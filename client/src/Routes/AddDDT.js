@@ -21,11 +21,11 @@ class AddDDT extends Component {
 
 		const Items = this.state.Items.filter(
 			item =>
-				item.value.Ammount &&
-				item.value.Model.code &&
-				item.value.Model.name &&
-				item.value.Color.name &&
-				item.value.Date
+				item.value.ammount &&
+				item.value.model.code &&
+				item.value.model.name &&
+				item.value.color.name &&
+				item.value.dueDate
 		);
 
 		console.log("posting");
