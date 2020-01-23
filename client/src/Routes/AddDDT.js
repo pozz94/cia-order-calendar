@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import DDTFormField from "./Components/DDTFormField";
 import ItemFormField from "./Components/ItemFormField";
-import {putJson, postJson} from "Utils/fetchUtils";
+import {putJson, postJson, deleteJson} from "Utils/fetchUtils";
 import c from "./AddDDT.module.css";
 
 const hash = () => [...Array(16)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
@@ -107,8 +107,12 @@ class AddDDT extends Component {
 	};
 
 	deleteItem = key => () => {
-		const Items = this.state.Items.filter(item => item.key !== key);
-		this.setState({Items});
+		const Item = this.state.Items.filter(item => item.itemKey === key)[0];
+		console.log(Item);
+		deleteJson(Item["@self"].url);
+		this.fetchItems(this.state.ddtData.customer,this.state.ddtData.ddtNumber)
+		//const Items = this.state.Items.filter(item => item.key !== key);
+		//this.setState({Items});
 	};
 
 	setDDT = ddtData => {
@@ -127,7 +131,6 @@ class AddDDT extends Component {
 				<React.Fragment>
 					<hr />
 					{this.state.Items.map((item, index) => {
-						console.log(item);
 						return (
 							<ItemFormField
 								key={item.itemKey}
