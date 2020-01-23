@@ -1,5 +1,5 @@
 import express from "express";
-import {idQuery} from "apiUtils";
+import {idQuery, deleteQuery} from "apiUtils";
 
 const router = express.Router();
 
@@ -21,5 +21,7 @@ router.get(
 			"WHERE `items`.`ID` = ?"
 	)
 );
+
+router.delete("/", (req, res, next)=>{console.log(req.vars.id); next();}, deleteQuery("DELETE FROM `items` WHERE `ID` = ?", "items"));
 
 export default router;

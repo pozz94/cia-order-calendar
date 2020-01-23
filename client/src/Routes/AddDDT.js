@@ -107,9 +107,12 @@ class AddDDT extends Component {
 	};
 
 	deleteItem = key => () => {
-		deleteJson("/api/items/select/bykey/"+key);
-		const Items = this.state.Items.filter(item => item.key !== key);
-		this.setState({Items});
+		const Item = this.state.Items.filter(item => item.itemKey === key)[0];
+		console.log(Item);
+		deleteJson(Item["@self"].url);
+		this.fetchItems(this.state.ddtData.customer,this.state.ddtData.ddtNumber)
+		//const Items = this.state.Items.filter(item => item.key !== key);
+		//this.setState({Items});
 	};
 
 	setDDT = ddtData => {
@@ -128,7 +131,6 @@ class AddDDT extends Component {
 				<React.Fragment>
 					<hr />
 					{this.state.Items.map((item, index) => {
-						console.log(item);
 						return (
 							<ItemFormField
 								key={item.itemKey}
