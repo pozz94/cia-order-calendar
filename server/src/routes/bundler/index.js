@@ -26,7 +26,7 @@ router.post("/", async (req, res, next) => {
 
 	//console.log(JSON.stringify(bundleParser.results[0], null, 2));
 
-	console.log(JSON.stringify(generator(req.rootUrl, req.body.query, req.body.url)));
+	console.log(JSON.stringify(await generator(req.rootUrl, req.body.query, req.body.url), null, 2));
 
 	res.json(await generator(req.rootUrl, req.body.query, req.body.url));
 });

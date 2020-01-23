@@ -5,14 +5,20 @@ const type = obj =>
 		.call(obj)
 		.toLowerCase()
 		.split(" ")[1]
-		.slice(-1);
+		.slice(0, -1);
 
 const generator = async (apiRoot, query, startingUrl = null, obj = null) => {
-	console.log(apiRoot + startingUrl);
 	try {
 		if (startingUrl) {
 			obj = await getJson(apiRoot + startingUrl).catch(error =>
-				console.log("[bundler] Error while getting", apiRoot + startingUrl, ":\n", error)
+				console.log(
+					"[bundler] Error while getting",
+					apiRoot + startingUrl,
+					"on",
+					query,
+					":\n",
+					error
+				)
 			);
 		}
 
@@ -20,7 +26,9 @@ const generator = async (apiRoot, query, startingUrl = null, obj = null) => {
 			return {
 				...obj,
 				collection: await Promise.all(
-					obj.collection.map(async item => await generator("", query, item))
+					obj.collection.map(
+						async item => await generator(apiRoot, query, item.replace(apiRoot, ""))
+					)
 				).catch(error => console.log("[bundler] Error while populating collection:", error))
 			};
 		}
