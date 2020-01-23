@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import DDTFormField from "./Components/DDTFormField";
 import ItemFormField from "./Components/ItemFormField";
-import {putJson, postJson, deletJson} from "Utils/fetchUtils";
+import {putJson, postJson, deleteJson} from "Utils/fetchUtils";
 import c from "./AddDDT.module.css";
 
 const hash = () => [...Array(16)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
@@ -107,7 +107,7 @@ class AddDDT extends Component {
 	};
 
 	deleteItem = key => () => {
-		deleteJson("/items/select/bykey/"+key);
+		deleteJson("/api/items/select/bykey/"+key);
 		const Items = this.state.Items.filter(item => item.key !== key);
 		this.setState({Items});
 	};

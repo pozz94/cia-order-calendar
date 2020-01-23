@@ -1,8 +1,8 @@
 import express from "express";
-import { searchQuery } from "apiUtils"
+import { selectQuery } from "apiUtils"
 
 const router = express.Router();
 
-router.delete("/", selectQuery("DELETE FROM `items` WHERE `itemKey` = ?", "items"));
+router.delete("/", (req, res, next)=>{console.log(req.vars.query); next();}, selectQuery("DELETE FROM `items` WHERE `itemKey` = ?", "items"));
 
 export default router;
