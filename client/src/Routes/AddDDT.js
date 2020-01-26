@@ -44,8 +44,27 @@ class AddDDT extends Component {
 
 	fetchItems = async (customer, code, callback = null) => {
 		const list = await postJson("/api/bundler", {
-			url: "/items",
-			query: [
+			query: `
+				items{
+					id,
+					ammount,
+					dueDate,
+					altName,
+					itemKey,
+					highlightColor,
+					color{name},
+					ddt{
+						code,
+						date,
+						customer{name}
+					},
+					model{
+						name, 
+						code
+					}
+				}
+			`,
+			asdf: [
 				"id",
 				"ammount",
 				"dueDate",
@@ -110,7 +129,7 @@ class AddDDT extends Component {
 		const Item = this.state.Items.filter(item => item.itemKey === key)[0];
 		console.log(Item);
 		deleteJson(Item["@self"].url);
-		this.fetchItems(this.state.ddtData.customer,this.state.ddtData.ddtNumber)
+		this.fetchItems(this.state.ddtData.customer, this.state.ddtData.ddtNumber);
 		//const Items = this.state.Items.filter(item => item.key !== key);
 		//this.setState({Items});
 	};

@@ -6,13 +6,13 @@ import generator from "./scripts/bundleGenerator";
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
-	const bundleParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
+	let bundleParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
-	bundleParser.feed(req.body.query);
+	bundleParser.feed(req.body.query.replace(/\s/g, ""));
 
 	//console.log(JSON.stringify(bundleParser.results[0], null, 2));
 
-	res.json(await generator(req.rootUrl, bundleParser.results[0], req.body.url));
+	res.json(await generator(req.rootUrl, bundleParser.results[0]));
 });
 
 export default router;

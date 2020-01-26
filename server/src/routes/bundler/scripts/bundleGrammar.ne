@@ -1,29 +1,28 @@
 @builtin "string.ne"
-@builtin "whitespace.ne"
 
-object -> _ string _ gen {%data => {return {href:data[1], ...data[3]}}%}
+object -> string gen {%data => {return {href:data[0], ...data[1]}}%}
 
-gen -> _ options:? "{" _ elements _ "}" _ 
+gen -> options:? "{" elements "}" 
 {%
     data => {
-        const options = (data[1] && data[1].filter(i => i !== null))?{options: data[1]}:null
+        const options = (data[0] && data[0].filter(i => i !== null))?{options: data[0]}:null
         return {
-            data: data[4],
+            data: data[2],
             ...options
         };
     }
 %}
 
-options-> _ "[" _ opts _ "]" _ {%data => data[3].filter(i => i !== null)%}
+options-> "[" opts "]"{%data => data[1].filter(i => i !== null)%}
 
 opts
-    -> opt _ "," _ opts {%data => [data[0], ...data[4]]%}
+    -> opt "," opts {%data => [data[0], ...data[2]]%}
     |  opt
 
-opt -> string _ ":" _ (dqstring|sqstring|btstring) {%data => {return {key:data[0], value:data[4][0]};}%}
+opt -> string ":" (dqstring|sqstring|btstring) {%data => {return {key:data[0], value:data[2][0]};}%}
 
 elements 
-    -> element _ "," _ elements {%data => [data[0], ...data[4]]%}
+    -> element "," elements {%data => [data[0], ...data[2]]%}
     |  element
 
 element 
