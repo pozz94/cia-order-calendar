@@ -1,6 +1,8 @@
 @builtin "string.ne"
 @builtin "whitespace.ne"
 
+object -> _ string _ gen {%data => {return {href:data[1], ...data[3]}}%}
+
 gen -> _ options:? "{" _ elements _ "}" _ 
 {%
     data => {
@@ -29,5 +31,3 @@ element
     |  object {%id%}
 
 string -> [a-zA-Z0-9]:+ {%data => data[0].join("")%}
-
-object -> string _ gen {%data => {return {[data[0]]:data[2]}}%}
