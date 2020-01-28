@@ -1,8 +1,25 @@
 import express from "express";
 import {putJson, processJsonResponse} from "fetchUtils";
 import {query, queryExists} from "dbUtils";
+import {prepareOptions} from "apiUtils";
 
 const router = express.Router();
+
+router.get("/", function(req, res, next) {
+	const options = prepareOptions(req.query, {
+		id: "ID",
+		code: "Code",
+		customers: "Customer",
+		date: "Date"
+	});
+	console.log(options);
+	query("SELECT `ID` AS id FROM `ddt`" + options, [], async items => {
+		res.json({
+			"@self": {url: req.currentUrl, type: "collection"},
+			collection: items.map(item => req.currentUrl.split("?")[0] + "/" + item.id)
+		});
+	});
+});
 
 router.put("/", (req, res, next) => {
 	if (ddtNumber && date && customerID) {
@@ -20,8 +37,7 @@ router.put("/", (req, res, next) => {
 				);
 			}
 		);
-	} else
-		res.status(500).json({error: "no ddt code, date or customer defined"});
+	} else res.status(500).json({error: "no ddt code, date or customer defined"});
 });
 
 export default router;

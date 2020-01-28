@@ -15,36 +15,19 @@ const AdminCalendar = () => {
 				ammount,
 				dueDate,
 				altName,
-				color{
+				colors{
 					id,
 					name
 				},
 				ddt{
 					code, 
-					customer{name}
+					customers{name}
 				},
-				model{
+				models{
 					name, 
 					code
 				}
-			}`,
-			asdf: [
-				"id",
-				"ammount",
-				"dueDate",
-				"asdfg",
-				"altName",
-				{
-					color: ["id", "name"],
-					ddt: [
-						"code",
-						{
-							customer: "name"
-						}
-					],
-					model: ["name", "code"]
-				}
-			]
+			}`
 		}).then(list => {
 			console.log(list);
 			setState({list: list.collection});

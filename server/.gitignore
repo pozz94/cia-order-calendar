@@ -1,4 +1,3 @@
 /node_modules
 .env
 /src/routes/bundler/scripts/bundleGrammar.js
-/src/routes/bundler/scripts/relationshipGrammar.js

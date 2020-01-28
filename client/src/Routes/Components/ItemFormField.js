@@ -34,9 +34,9 @@ class AddDDT extends Component {
 	addNextItemIfComplete = () => {
 		if (
 			this.props.value.ammount &&
-			this.props.value.model.code &&
-			this.props.value.model.name &&
-			this.props.value.color.name &&
+			this.props.value.models.code &&
+			this.props.value.models.name &&
+			this.props.value.colors.name &&
 			this.props.value.dueDate &&
 			this.props.isLast
 		)
@@ -69,7 +69,7 @@ class AddDDT extends Component {
 				/>
 				<InputSuggestion
 					placeholder="Codice Oggetto"
-					value={value.model}
+					value={value.models}
 					whichProperty={"code"}
 					fetchSuggestionsFrom="/api/models/search/bycode/"
 					setValue={setValue("model")}
@@ -79,7 +79,7 @@ class AddDDT extends Component {
 				/>
 				<InputSuggestion
 					placeholder="Nome Oggetto"
-					value={value.model}
+					value={value.models}
 					whichProperty={"name"}
 					fetchSuggestionsFrom="/api/models/search/byname/"
 					setValue={setValue("model")}
@@ -89,7 +89,7 @@ class AddDDT extends Component {
 				/>
 				<InputSuggestion
 					placeholder="Colore"
-					value={value.color}
+					value={value.colors}
 					whichProperty={"name"}
 					fetchSuggestionsFrom="/api/colors/search/byname/"
 					setValue={setValue("color")}

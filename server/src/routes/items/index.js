@@ -1,20 +1,29 @@
 import express from "express";
 import {postJson, processJsonResponse} from "fetchUtils";
 import {query} from "dbUtils";
+import {prepareOptions} from "apiUtils";
 
 const router = express.Router();
 
 router.get("/", function(req, res, next) {
-	query(
-		"SELECT `ID` AS id FROM `items`",
-		[],
-		async items => {
-			res.json({
-				"@self": {url: req.currentUrl, type: "collection"},
-				collection: items.map(item => req.currentUrl + "/" + item.id)
-			});
-		}
-	);
+	const options = prepareOptions(req.query, {
+		id: "ID",
+		ddt: "DDT",
+		ammount: "Ammount",
+		models: "Item",
+		altName: "AltName",
+		colors: "Color",
+		dueDate: "DueDate",
+		packaging: "Packaging",
+		highlightColor: "HighlightColor",
+		itemKey: "ItemKey"
+	});
+	query("SELECT `ID` AS id FROM `items`" + options, [], async items => {
+		res.json({
+			"@self": {url: req.currentUrl, type: "collection"},
+			collection: items.map(item => req.currentUrl.split("?")[0] + "/" + item.id)
+		});
+	});
 });
 
 router.post("/", (req, res, next) => {

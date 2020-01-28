@@ -16,7 +16,7 @@ const DDTFormField = props => {
 
 	const setFocus = toFocus => () => {
 		if (customer && ddtNumber) {
-			props.fetchItems(customer.name, ddtNumber, () => {
+			props.fetchDDT(customer.id, ddtNumber, () => {
 				if (customer && ddtNumber && date) {
 					props.addItem();
 				}

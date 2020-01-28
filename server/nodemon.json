@@ -2,8 +2,5 @@
 	"exec": "npm run dev",
 	"watch": ["src/*", "public/*"],
 	"ext": "js, html, css, json, ne",
-	"ignore": [
-		"src/routes/bundler/scripts/bundleGrammar.js",
-		"src/routes/bundler/scripts/relationshipGrammar.js"
-	]
+	"ignore": ["src/routes/bundler/scripts/bundleGrammar.js"]
 }

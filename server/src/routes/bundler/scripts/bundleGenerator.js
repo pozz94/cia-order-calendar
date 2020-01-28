@@ -1,6 +1,4 @@
 import {getJson} from "fetchUtils";
-import nearley from "nearley";
-import grammar from "./relationshipGrammar";
 
 const type = obj =>
 	Object.prototype.toString
@@ -11,9 +9,44 @@ const type = obj =>
 
 const generator = async (apiRoot, query) => {
 	try {
-		const href = apiRoot + "/" + query.href + (query.id ? "/" + query.id : "");
+		let newOptions = await Promise.all(
+			query.data.map(async element => {
+				if (element.options) {
+					const value = await generator(apiRoot, {...element, data: ["id"]});
 
-		//console.log(query);
+					delete element.options;
+
+					return {[element.href]: value.collection.map(el => el.id)};
+				}
+			})
+		);
+
+		newOptions = newOptions
+			.filter(element => (element ? true : false))
+			.reduce((a, b) => {
+				return {...a, ...b};
+			}, undefined);
+
+		if (newOptions) {
+			query = {
+				...query,
+				options: {...(query.options || {}), ...newOptions}
+			};
+		}
+
+		let params = "";
+
+		if (query.options) {
+			params =
+				"?" +
+				Object.keys(query.options)
+					.map(key => `${key}=${encodeURIComponent(JSON.stringify(query.options[key]))}`)
+					.join("&");
+		}
+
+		const href = apiRoot + "/" + query.href + (query.id ? "/" + query.id : params);
+
+		console.log(apiRoot + "/" + query.href + (query.id ? "/" + query.id : params));
 
 		let obj = await getJson(href).catch(error =>
 			console.log("[bundler] Error while getting", href, "on", query, ":\n", error)
@@ -24,7 +57,7 @@ const generator = async (apiRoot, query) => {
 				...obj,
 				collection: await Promise.all(
 					obj.collection.map(item =>
-						generator(apiRoot, {...query, href: item.replace(apiRoot, "")})
+						generator(apiRoot, {...query, id: item.replace(href.split("?")[0] + "/", "")})
 					)
 				).catch(error => console.log("[bundler] Error while populating collection:", error))
 			};
@@ -37,38 +70,15 @@ const generator = async (apiRoot, query) => {
 							...() => (obj[element] ? null : {error: element + " not found"})
 						};
 					} else if (type(element) === "object") {
-						if (!obj.relationships) {
-							obj.relationships = Object.keys(obj)
-								.map(el => {
-									const relationshipParser = new nearley.Parser(
-										nearley.Grammar.fromCompiled(grammar)
-									);
-									relationshipParser.feed(el);
-									if (relationshipParser.results[0]) {
-										return {
-											[relationshipParser.results[0].key]: {
-												href: relationshipParser.results[0].href,
-												id: obj[el]
-											}
-										};
-									}
-								})
-								.filter(el => el !== null)
-								.reduce((a, b) => {
-									return {...a, ...b};
-								});
-							//console.log(obj.relationships);
-						}
+						//console.log(obj, element);
 						return {
-							[element.href]: await generator(apiRoot, {
-								...element,
-								...obj.relationships[element.href]
-							})
+							[element.href]:
+								(await generator(apiRoot, {...element, id: obj[element.href]})) || null,
+							...() => (obj[element.href] ? null : {error: element.href + " not found"})
 						};
 					}
 				})
 			);
-			//console.log(response);
 			return {
 				"@self": obj["@self"],
 				...response.reduce((a, b) => {

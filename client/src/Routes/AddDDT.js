@@ -42,7 +42,7 @@ class AddDDT extends Component {
 		});
 	};
 
-	fetchItems = async (customer, code, callback = null) => {
+	fetchDDT = async (customer, number, callback = null) => {
 		const list = await postJson("/api/bundler", {
 			query: `
 				items{
@@ -52,38 +52,18 @@ class AddDDT extends Component {
 					altName,
 					itemKey,
 					highlightColor,
-					color{name},
-					ddt{
+					colors{name},
+					ddt(customers=${customer}, code=${number}){
 						code,
 						date,
-						customer{name}
+						customers{name}
 					},
-					model{
+					models{
 						name, 
 						code
 					}
 				}
-			`,
-			asdf: [
-				"id",
-				"ammount",
-				"dueDate",
-				"asdfg",
-				"altName",
-				"itemKey",
-				"highlightColor",
-				{
-					color: ["id", "name"],
-					ddt: [
-						"code",
-						"date",
-						{
-							customer: "name"
-						}
-					],
-					model: ["name", "code"]
-				}
-			]
+			`
 		});
 		if (!list.error) {
 			console.log(list);
@@ -106,8 +86,8 @@ class AddDDT extends Component {
 		const Items = [
 			...this.state.Items,
 			{
-				model: {},
-				color: {},
+				models: {},
+				colors: {},
 				dueDate: lastItem.date || "",
 				packaging: lastItem.packaging || false,
 				highlightColor: lastItem.highlightColor || "#fff",
@@ -144,7 +124,7 @@ class AddDDT extends Component {
 				ddtData={this.state.ddtData}
 				setDDT={this.setDDT}
 				addItem={this.addItem}
-				fetchItems={this.fetchItems}
+				fetchDDT={this.fetchDDT}
 			/>
 			{this.state.Items.length ? (
 				<React.Fragment>
