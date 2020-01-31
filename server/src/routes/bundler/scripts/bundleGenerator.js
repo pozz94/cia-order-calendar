@@ -46,8 +46,6 @@ const generator = async (apiRoot, query) => {
 
 		const href = apiRoot + "/" + query.href + (query.id ? "/" + query.id : params);
 
-		console.log(apiRoot + "/" + query.href + (query.id ? "/" + query.id : params));
-
 		let obj = await getJson(href).catch(error =>
 			console.log("[bundler] Error while getting", href, "on", query, ":\n", error)
 		);
@@ -70,7 +68,6 @@ const generator = async (apiRoot, query) => {
 							...() => (obj[element] ? null : {error: element + " not found"})
 						};
 					} else if (type(element) === "object") {
-						//console.log(obj, element);
 						return {
 							[element.href]:
 								(await generator(apiRoot, {...element, id: obj[element.href]})) || null,

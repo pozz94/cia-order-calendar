@@ -2,18 +2,19 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 
+//function to generate the list of routes
+const routes = (dir, filelist = [], firstDir = null) => {
+	firstDir = firstDir || dir;
+	fs.readdirSync(dir).forEach(file => {
+		filelist = fs.statSync(path.join(dir, file)).isDirectory()
+			? routes(path.join(dir, file), filelist, firstDir)
+			: filelist.concat(path.relative(firstDir, path.join(dir, file)));
+	});
+	return filelist;
+};
+
 const router = routesPath => {
 	const expressRouter = express.Router();
-	//function to generate the list of routes
-	const routes = (dir, filelist = [], firstDir = null) => {
-		firstDir = firstDir || dir;
-		fs.readdirSync(dir).forEach(file => {
-			filelist = fs.statSync(path.join(dir, file)).isDirectory()
-				? routes(path.join(dir, file), filelist, firstDir)
-				: filelist.concat(path.relative(firstDir, path.join(dir, file)));
-		});
-		return filelist;
-	};
 
 	//Read each file in the routesPath directory
 	routes(path.join(__dirname, routesPath))
@@ -29,6 +30,7 @@ const router = routesPath => {
 				//Serve index files as father dir. Also removes empty items just to be safe
 				.filter(dir => dir !== "index" && dir != "");
 
+			//remove all directories that are in a scripts folder
 			if (!urlSections.includes("scripts")) {
 				return {
 					file: routesPath + "/" + route.replace(/[\\\/]/g, "/"),
