@@ -10,8 +10,6 @@ router.post("/", async (req, res, next) => {
 
 	bundleParser.feed(req.body.query.replace(/\s/g, ""));
 
-	//console.log(JSON.stringify(bundleParser.results[0], null, 2));
-
 	res.json(await generator(req.rootUrl, bundleParser.results[0]));
 });
 
