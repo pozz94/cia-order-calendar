@@ -5,7 +5,7 @@ import {prepareOptions} from "apiUtils";
 const router = express.Router();
 
 router.get("/", function(req, res, next) {
-	const options = prepareOptions(req.vars, {id: "ID", code: "Code", name: "Name"});
+	const options = prepareOptions(req.query, {id: "ID", code: "Code", name: "Name"});
 	query("SELECT `ID` AS id FROM `models`" + options, [], async items => {
 		res.json({
 			"@self": {url: req.currentUrl, type: "collection"},

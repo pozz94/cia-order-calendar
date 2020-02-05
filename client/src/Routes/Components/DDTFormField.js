@@ -12,12 +12,12 @@ const onEnter = callback => event => {
 };
 
 const DDTFormField = props => {
-	const {customer, ddtNumber, date} = props.ddtData;
+	const {customers, code, date} = props.ddtData;
 
 	const setFocus = toFocus => () => {
-		if (customer && ddtNumber) {
-			props.fetchDDT(customer.id, ddtNumber, () => {
-				if (customer && ddtNumber && date) {
+		if (customers && code) {
+			props.fetchDDT(props.ddtData, () => {
+				if (customers && code && date) {
 					props.addItem();
 				}
 			});
@@ -37,21 +37,21 @@ const DDTFormField = props => {
 		<React.Fragment>
 			<InputSuggestion
 				placeholder="Cliente"
-				value={props.ddtData.customer}
+				value={props.ddtData.customers}
 				whichProperty="name"
-				fetchSuggestionsFrom="/api/customers/search/byname/"
+				query="customers(name='%[value]%'){id, name}"
 				setValue={value => {
-					props.setDDT({customer: value});
+					props.setDDT({customers: value});
 				}}
-				onSelect={setFocus("ddtNumber")}
-				onEnter={setFocus("ddtNumber")}
+				onSelect={setFocus("code")}
+				onEnter={setFocus("code")}
 				inputRef={setInputRefs("customer")}
 			/>
 			<input
-				value={ddtNumber || ""}
+				value={code || ""}
 				onChange={event =>
 					props.setDDT({
-						ddtNumber: event.target.value
+						code: event.target.value
 					})
 				}
 				className={c.number}
@@ -59,10 +59,10 @@ const DDTFormField = props => {
 				pattern="[0-9]*"
 				min="0"
 				placeholder="DDT"
-				ref={setInputRefs("ddtNumber")}
+				ref={setInputRefs("code")}
 				onKeyPress={onEnter(event => {
 					props.setDDT({
-						ddtNumber: event.target.value
+						code: event.target.value
 					});
 					setFocus("date")();
 				})}
@@ -79,7 +79,7 @@ const DDTFormField = props => {
 						date: event.target.value
 					});
 					setFocus("number")();
-					if (customer && ddtNumber && date) props.addItem();
+					if (customers && code && date) props.addItem();
 				})}
 				onKeyDown={event => {
 					if (event.keyCode === 9) {

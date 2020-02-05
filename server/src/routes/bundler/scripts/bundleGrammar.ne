@@ -16,8 +16,8 @@ gen -> options:? "{" elements "}"
 options-> "(" opts ")"{%data => data[1]%}
 
 opts
-    -> opt "," opts {%data => {return {...data[0], ...data[2][0]}}%}
-    |  opt
+    -> opt "," opts {%data => {return {...data[0], ...data[2]}}%}
+    |  opt {% id %}
 
 opt -> string "=" (dqstring|sqstring|btstring|number) {%data => {return {[data[0]]:data[2][0]};}%}
 

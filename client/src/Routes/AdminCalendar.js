@@ -29,7 +29,6 @@ const AdminCalendar = () => {
 				}
 			}`
 		}).then(list => {
-			console.log(list);
 			setState({list: list.collection});
 		});
 		console.log("fetching");

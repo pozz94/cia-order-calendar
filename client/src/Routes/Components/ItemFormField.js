@@ -71,8 +71,8 @@ class AddDDT extends Component {
 					placeholder="Codice Oggetto"
 					value={value.models}
 					whichProperty={"code"}
-					fetchSuggestionsFrom="/api/models/search/bycode/"
-					setValue={setValue("model")}
+					query="models(code='%[value]%'){id, name, code}"
+					setValue={setValue("models")}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("itemName")}
 					inputRef={setRef("itemCode")}
@@ -81,8 +81,8 @@ class AddDDT extends Component {
 					placeholder="Nome Oggetto"
 					value={value.models}
 					whichProperty={"name"}
-					fetchSuggestionsFrom="/api/models/search/byname/"
-					setValue={setValue("model")}
+					query="models(name='%[value]%'){id, name, code}"
+					setValue={setValue("models")}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("color")}
 					inputRef={setRef("itemName")}
@@ -91,8 +91,8 @@ class AddDDT extends Component {
 					placeholder="Colore"
 					value={value.colors}
 					whichProperty={"name"}
-					fetchSuggestionsFrom="/api/colors/search/byname/"
-					setValue={setValue("color")}
+					query="colors(name='%[value]%'){id, name}"
+					setValue={setValue("colors")}
 					onSelect={setFocus("date")}
 					onEnter={setFocus("date")}
 					inputRef={setRef("color")}

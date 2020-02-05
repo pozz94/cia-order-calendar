@@ -14,7 +14,11 @@ const generator = async (apiRoot, query) => {
 				if (element.options) {
 					const value = await generator(apiRoot, {...element, data: ["id"]});
 
+					console.log("[bundle generator]", element.options);
+
 					delete element.options;
+
+					console.log("[bundle generator]", {[element.href]: value.collection.map(el => el.id)});
 
 					return {[element.href]: value.collection.map(el => el.id)};
 				}
@@ -28,9 +32,10 @@ const generator = async (apiRoot, query) => {
 			}, undefined);
 
 		if (newOptions) {
+			console.log("[bundle generator]", query);
 			query = {
 				...query,
-				options: {...(query.options || {}), ...newOptions}
+				options: {...(query.options || {}), ...(newOptions || {})}
 			};
 		}
 
@@ -42,6 +47,7 @@ const generator = async (apiRoot, query) => {
 				Object.keys(query.options)
 					.map(key => `${key}=${encodeURIComponent(JSON.stringify(query.options[key]))}`)
 					.join("&");
+			console.log("[bundler]", query.options, params);
 		}
 
 		const href = apiRoot + "/" + query.href + (query.id ? "/" + query.id : params);
