@@ -1,22 +1,14 @@
-import express from "express";
-import {query} from "dbUtils";
-import {prepareOptions} from "apiUtils";
+import generateRouter from "generateRouter";
 
-const router = express.Router();
+const aliases = {
+	id: "ID",
+	code: "Code",
+	customers: "Customer",
+	date: "Date"
+};
 
-router.get("/", function(req, res, next) {
-	const options = prepareOptions(req.query, {
-		id: "ID",
-		code: "Code",
-		customers: "Customer",
-		date: "Date"
-	});
-	query("SELECT `ID` AS id FROM `ddt`" + options, [], async items => {
-		res.json({
-			"@self": {url: req.currentUrl, type: "collection"},
-			collection: items.map(item => req.currentUrl.split("?")[0] + "/" + item.id)
-		});
-	});
-});
+const table = "ddt";
+
+const router = generateRouter(table, aliases);
 
 export default router;

@@ -12,8 +12,6 @@ router.post("/", async (req, res, next) => {
 
 		bundleParser.feed(req.body.query);
 
-		//console.log(JSON.stringify(bundleParser.results[0], null, 2));
-
 		res.json(await getBundle(req.rootUrl, bundleParser.results[0]));
 	} else if (type(req.body.query) === "object") {
 		res.json(await bundle);

@@ -144,7 +144,9 @@ class AddDDT extends Component {
 
 	componentDidMount = () => {
 		const {id} = queryString.parse(this.props.location.search);
-		this.fetchDDT({id}, this.addItem);
+		if (id) {
+			this.fetchDDT({id}, this.addItem);
+		}
 	};
 
 	render = () => (
