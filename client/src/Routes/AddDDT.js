@@ -103,15 +103,17 @@ class AddDDT extends Component {
 	};
 
 	addItem = () => {
-		let lastItem = (this.state.Items.slice(-1)[0] && this.state.Items.slice(-1)[0].value) || {};
+		const lastItem = (this.state.Items.slice(-1)[0] && this.state.Items.slice(-1)[0]) || {};
+		//console.log(JSON.stringify(this.state.Items.slice(-1), null, 2));
 		const Items = [
 			...this.state.Items,
 			{
 				models: {},
 				colors: {},
-				dueDate: lastItem.date || "",
+				dueDate: lastItem.dueDate || "",
 				packaging: lastItem.packaging || false,
 				highlightColor: lastItem.highlightColor || "#fff",
+				ddt: this.state.ddtData,
 				itemKey: hash()
 			}
 		];

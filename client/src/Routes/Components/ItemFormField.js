@@ -144,7 +144,7 @@ class AddDDT extends Component {
 					}
 					defaultColor={
 						"#" +
-						((value.highlightColor && value.highlightColor.toString(16).slice(0 - 2)) || "fff")
+						((value.highlightColor && value.highlightColor.toString(16).slice(0, -2)) || "fff")
 					}
 					colors={[
 						"#fdb790",
@@ -177,6 +177,9 @@ class AddDDT extends Component {
 				>
 					<FontAwesomeIcon icon={faTrashAlt} color="#FFFFFF" style={{fontSize: "1.25rem"}} />
 				</button>
+				{console.log(
+					"#" + ((value.highlightColor && value.highlightColor.toString(16).slice(0, -2)) || "fff")
+				)}
 			</div>
 		);
 	};
