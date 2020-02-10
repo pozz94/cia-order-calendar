@@ -22,8 +22,6 @@ const lexer = moo.compile({
 %}
 @lexer lexer
 
-#@builtin "string.ne"
-
 object -> _ %name _ gen _ {%data => {return {href:data[1].text, ...data[3]}}%}
 
 gen -> options:? _ "{" elements "}" 
