@@ -3,6 +3,7 @@ import DDTFormField from "./Components/DDTFormField";
 import ItemFormField from "./Components/ItemFormField";
 import {putJson, postJson, deleteJson} from "Utils/fetchUtils";
 import c from "./AddDDT.module.css";
+import queryString from "query-string";
 
 const hash = () => [...Array(16)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
 
@@ -43,6 +44,14 @@ class AddDDT extends Component {
 	};
 
 	fetchDDT = async (ddtData, callback = null) => {
+		let query;
+		if (ddtData.id) {
+			query = `id=${ddtData.id}`;
+		} else if (ddtData.code && ddtData.customers.id) {
+			query = `code=${ddtData.code}, customers=${ddtData.customers.id}`;
+		} else {
+			query = `id=0`;
+		}
 		const list = await postJson("/api/bundler", {
 			query: `
 				items{
@@ -52,16 +61,14 @@ class AddDDT extends Component {
 					altName,
 					itemKey,
 					highlightColor,
-					colors{name},
-					ddt(code=${ddtData.code}, customers=${ddtData.customers.id}){
+					colors{id, name},
+					models{id, name, code},
+					ddt(${query}){
+						id,
 						code,
 						date,
-						customers{name}
-					},
-					models{
-						name, 
-						code
-					}
+						customers{id, name}
+					}					
 				}
 			`
 		});
@@ -82,6 +89,10 @@ class AddDDT extends Component {
 		} else {
 			this.setState(
 				{
+					ddtData: {
+						...this.state.ddtData,
+						"@self": undefined
+					},
 					Items: []
 				},
 				() => {
@@ -127,6 +138,11 @@ class AddDDT extends Component {
 
 	setDDT = ddtData => {
 		this.setState({ddtData: {...this.state.ddtData, ...ddtData}});
+	};
+
+	componentDidMount = () => {
+		const {id} = queryString.parse(this.props.location.search);
+		this.fetchDDT({id}, this.addItem);
 	};
 
 	render = () => (

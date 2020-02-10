@@ -1,24 +1,14 @@
 import {getJson} from "fetchUtils";
+import type from "typeCheck.js";
 
-const type = obj =>
-	Object.prototype.toString
-		.call(obj)
-		.toLowerCase()
-		.split(" ")[1]
-		.slice(0, -1);
-
-const generator = async (apiRoot, query) => {
+const getBundle = async (apiRoot, query) => {
 	try {
 		let newOptions = await Promise.all(
 			query.data.map(async element => {
 				if (element.options) {
-					const value = await generator(apiRoot, {...element, data: ["id"]});
-
-					console.log("[bundle generator]", element.options);
+					const value = await getBundle(apiRoot, {...element, data: ["id"]});
 
 					delete element.options;
-
-					console.log("[bundle generator]", {[element.href]: value.collection.map(el => el.id)});
 
 					return {[element.href]: value.collection.map(el => el.id)};
 				}
@@ -32,7 +22,6 @@ const generator = async (apiRoot, query) => {
 			}, undefined);
 
 		if (newOptions) {
-			console.log("[bundle generator]", query);
 			query = {
 				...query,
 				options: {...(query.options || {}), ...(newOptions || {})}
@@ -47,7 +36,6 @@ const generator = async (apiRoot, query) => {
 				Object.keys(query.options)
 					.map(key => `${key}=${encodeURIComponent(JSON.stringify(query.options[key]))}`)
 					.join("&");
-			console.log("[bundler]", query.options, params);
 		}
 
 		const href = apiRoot + "/" + query.href + (query.id ? "/" + query.id : params);
@@ -61,7 +49,7 @@ const generator = async (apiRoot, query) => {
 				...obj,
 				collection: await Promise.all(
 					obj.collection.map(item =>
-						generator(apiRoot, {...query, id: item.replace(href.split("?")[0] + "/", "")})
+						getBundle(apiRoot, {...query, id: item.replace(href.split("?")[0] + "/", "")})
 					)
 				).catch(error => console.log("[bundler] Error while populating collection:", error))
 			};
@@ -76,7 +64,7 @@ const generator = async (apiRoot, query) => {
 					} else if (type(element) === "object") {
 						return {
 							[element.href]:
-								(await generator(apiRoot, {...element, id: obj[element.href]})) || null,
+								(await getBundle(apiRoot, {...element, id: obj[element.href]})) || null,
 							...() => (obj[element.href] ? null : {error: element.href + " not found"})
 						};
 					}
@@ -94,4 +82,4 @@ const generator = async (apiRoot, query) => {
 	}
 };
 
-export default generator;
+export default getBundle;

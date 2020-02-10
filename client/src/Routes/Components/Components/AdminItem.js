@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 const item = props => {
 	const name = props.data.altName ? props.data.altName : props.data.models.name;
@@ -24,7 +25,9 @@ const item = props => {
 			<td>{props.data.models.code}</td>
 			<td>{name}</td>
 			<td>{props.data.ddt.customers.name}</td>
-			<td>{props.data.ddt.code}</td>
+			<td>
+				<Link to={"/add-ddt?id=" + props.data.ddt.id}>{props.data.ddt.code}</Link>
+			</td>
 			<td>{props.data.colors.name}</td>
 			<td>{formattedDate}</td>
 

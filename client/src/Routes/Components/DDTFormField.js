@@ -39,7 +39,7 @@ const DDTFormField = props => {
 				placeholder="Cliente"
 				value={props.ddtData.customers}
 				whichProperty="name"
-				query="customers(name='%[value]%'){id, name}"
+				query="customers(name=[%value%]){id, name}"
 				setValue={value => {
 					props.setDDT({customers: value});
 				}}

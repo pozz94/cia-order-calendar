@@ -17,6 +17,13 @@ class AddDDT extends Component {
 		this.props.refreshThisItem({...this.props.value, [whatValue]: value});
 	};
 
+	setAltName = value => {
+		this.props.refreshThisItem({
+			...this.props.value,
+			altName: value.altName
+		});
+	};
+
 	setFocus = toFocus => () => {
 		this.inputRefs[toFocus] && this.inputRefs[toFocus].focus();
 		this.addNextItemIfComplete();
@@ -48,7 +55,7 @@ class AddDDT extends Component {
 	};
 
 	render = () => {
-		const {setInputRefs: setRef, setFocus, onEnter, setValue} = this;
+		const {setInputRefs: setRef, setFocus, onEnter, setValue, setAltName} = this;
 		const {deleteThisItem, value} = this.props;
 
 		return (
@@ -71,7 +78,7 @@ class AddDDT extends Component {
 					placeholder="Codice Oggetto"
 					value={value.models}
 					whichProperty={"code"}
-					query="models(code='%[value]%'){id, name, code}"
+					query="models(code=[%value%]){id, name, code}"
 					setValue={setValue("models")}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("itemName")}
@@ -81,8 +88,18 @@ class AddDDT extends Component {
 					placeholder="Nome Oggetto"
 					value={value.models}
 					whichProperty={"name"}
-					query="models(name='%[value]%'){id, name, code}"
+					query="models(name=[%value%]){id, name, code}"
 					setValue={setValue("models")}
+					onSelect={setFocus("color")}
+					onEnter={setFocus("color")}
+					inputRef={setRef("itemName")}
+				/>
+				<InputSuggestion
+					placeholder="Descrizione alternativa"
+					value={value}
+					whichProperty={"altName"}
+					query="items(altName=[%value%]){altName}"
+					setValue={setAltName}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("color")}
 					inputRef={setRef("itemName")}
@@ -91,7 +108,7 @@ class AddDDT extends Component {
 					placeholder="Colore"
 					value={value.colors}
 					whichProperty={"name"}
-					query="colors(name='%[value]%'){id, name}"
+					query="colors(name=[%value%]){id, name}"
 					setValue={setValue("colors")}
 					onSelect={setFocus("date")}
 					onEnter={setFocus("date")}
@@ -122,8 +139,13 @@ class AddDDT extends Component {
 					ref={setRef("packaging")}
 				/>
 				<BubblePreset
-					onChange={color => setValue("highlightColor")(color)}
-					defaultColor={value.highlightColor || "#fff"}
+					onChange={color =>
+						setValue("highlightColor")(parseInt(color.replace("#", "") + "ff", 16))
+					}
+					defaultColor={
+						"#" +
+						((value.highlightColor && value.highlightColor.toString(16).slice(0 - 2)) || "fff")
+					}
 					colors={[
 						"#fdb790",
 						"#fdfa63",
