@@ -1,10 +1,8 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 const item = props => {
-	const name =
-		props.data.altName
-			? props.data.altName
-			: props.data.model.name;
+	const name = props.data.altName ? props.data.altName : props.data.models.name;
 	const date = new Date(props.data.dueDate);
 	//date = new Date("2019-10-25");
 	const weekday = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
@@ -24,11 +22,13 @@ const item = props => {
 	return (
 		<tr>
 			<td>{props.data.ammount}</td>
-			<td>{props.data.model.code}</td>
+			<td>{props.data.models.code}</td>
 			<td>{name}</td>
-			<td>{props.data.ddt.customer.name}</td>
-			<td>{props.data.ddt.code}</td>
-			<td>{props.data.color.name}</td>
+			<td>{props.data.ddt.customers.name}</td>
+			<td>
+				<Link to={"/add-ddt?id=" + props.data.ddt.id}>{props.data.ddt.code}</Link>
+			</td>
+			<td>{props.data.colors.name}</td>
 			<td>{formattedDate}</td>
 
 			<td style={{display: "none"}}>{JSON.stringify(props.data)}</td>

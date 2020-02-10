@@ -8,11 +8,11 @@ router.get(
 	idQuery(
 		"SELECT " +
 			"`ID` AS id, " +
-			"`DDT` AS `href_ddt$ddt`, " +
+			"`DDT` AS `ddt`, " +
 			"`Ammount` AS ammount, " +
-			"`Item` AS `href_models$model`, " +
+			"`Item` AS `models`, " +
 			"`AltName` AS altName, " +
-			"`Color` AS `href_colors$color`, " +
+			"`Color` AS `colors`, " +
 			"`DueDate` AS dueDate, " +
 			"`Packaging` AS packaging, " +
 			"`HighlightColor` AS highlightColor, " +
@@ -22,6 +22,13 @@ router.get(
 	)
 );
 
-router.delete("/", (req, res, next)=>{console.log(req.vars.id); next();}, deleteQuery("DELETE FROM `items` WHERE `ID` = ?", "items"));
+router.delete(
+	"/",
+	(req, res, next) => {
+		console.log(req.vars.id);
+		next();
+	},
+	deleteQuery("DELETE FROM `items` WHERE `ID` = ?", "items")
+);
 
 export default router;

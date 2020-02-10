@@ -1,32 +1,23 @@
 import express from "express";
 import nearley from "nearley";
-import grammar from "./scripts/grammar";
-import generator from "./scripts/bundleGenerator";
+import grammar from "./scripts/bundleGrammar";
+import getBundle from "./scripts/getBundle";
+import type from "typeCheck.js";
 
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
-	const bundleParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
+	if (type(req.body.query) === "string") {
+		let bundleParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
-	bundleParser.feed(`
-		[
-			href:"${req.rootUrl + req.body.url}",
-			nome:"mo",
-			range:"0-1"
-		]{
-			1string, 
-			1obj{
-				2string
-			}, 
-			2obj{
-				3string
-			}
-		}
-	`);
+		bundleParser.feed(req.body.query);
 
-	//console.log(JSON.stringify(bundleParser.results[0], null, 2));
+		//console.log(JSON.stringify(bundleParser.results[0], null, 2));
 
-	res.json(await generator(req.rootUrl, req.body.query, req.body.url));
+		res.json(await getBundle(req.rootUrl, bundleParser.results[0]));
+	} else if (type(req.body.query) === "object") {
+		res.json(await bundle);
+	}
 });
 
 export default router;

@@ -17,6 +17,13 @@ class AddDDT extends Component {
 		this.props.refreshThisItem({...this.props.value, [whatValue]: value});
 	};
 
+	setAltName = value => {
+		this.props.refreshThisItem({
+			...this.props.value,
+			altName: value.altName
+		});
+	};
+
 	setFocus = toFocus => () => {
 		this.inputRefs[toFocus] && this.inputRefs[toFocus].focus();
 		this.addNextItemIfComplete();
@@ -34,9 +41,9 @@ class AddDDT extends Component {
 	addNextItemIfComplete = () => {
 		if (
 			this.props.value.ammount &&
-			this.props.value.model.code &&
-			this.props.value.model.name &&
-			this.props.value.color.name &&
+			this.props.value.models.code &&
+			this.props.value.models.name &&
+			this.props.value.colors.name &&
 			this.props.value.dueDate &&
 			this.props.isLast
 		)
@@ -48,7 +55,7 @@ class AddDDT extends Component {
 	};
 
 	render = () => {
-		const {setInputRefs: setRef, setFocus, onEnter, setValue} = this;
+		const {setInputRefs: setRef, setFocus, onEnter, setValue, setAltName} = this;
 		const {deleteThisItem, value} = this.props;
 
 		return (
@@ -69,30 +76,40 @@ class AddDDT extends Component {
 				/>
 				<InputSuggestion
 					placeholder="Codice Oggetto"
-					value={value.model}
+					value={value.models}
 					whichProperty={"code"}
-					fetchSuggestionsFrom="/api/models/search/bycode/"
-					setValue={setValue("model")}
+					query="models(code=[%value%]){id, name, code}"
+					setValue={setValue("models")}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("itemName")}
 					inputRef={setRef("itemCode")}
 				/>
 				<InputSuggestion
 					placeholder="Nome Oggetto"
-					value={value.model}
+					value={value.models}
 					whichProperty={"name"}
-					fetchSuggestionsFrom="/api/models/search/byname/"
-					setValue={setValue("model")}
+					query="models(name=[%value%]){id, name, code}"
+					setValue={setValue("models")}
+					onSelect={setFocus("color")}
+					onEnter={setFocus("color")}
+					inputRef={setRef("itemName")}
+				/>
+				<InputSuggestion
+					placeholder="Descrizione alternativa"
+					value={value}
+					whichProperty={"altName"}
+					query="items(altName=[%value%]){altName}"
+					setValue={setAltName}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("color")}
 					inputRef={setRef("itemName")}
 				/>
 				<InputSuggestion
 					placeholder="Colore"
-					value={value.color}
+					value={value.colors}
 					whichProperty={"name"}
-					fetchSuggestionsFrom="/api/colors/search/byname/"
-					setValue={setValue("color")}
+					query="colors(name=[%value%]){id, name}"
+					setValue={setValue("colors")}
 					onSelect={setFocus("date")}
 					onEnter={setFocus("date")}
 					inputRef={setRef("color")}
@@ -122,8 +139,13 @@ class AddDDT extends Component {
 					ref={setRef("packaging")}
 				/>
 				<BubblePreset
-					onChange={color => setValue("highlightColor")(color)}
-					defaultColor={value.highlightColor || "#fff"}
+					onChange={color =>
+						setValue("highlightColor")(parseInt(color.replace("#", "") + "ff", 16))
+					}
+					defaultColor={
+						"#" +
+						((value.highlightColor && value.highlightColor.toString(16).slice(0 - 2)) || "fff")
+					}
 					colors={[
 						"#fdb790",
 						"#fdfa63",

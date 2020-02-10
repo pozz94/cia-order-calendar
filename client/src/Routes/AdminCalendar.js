@@ -1,6 +1,6 @@
 import React, {useState, useRef, useCallback, useEffect} from "react";
 import AdminList from "./Components/AdminList";
-import { postJson } from "Utils/fetchUtils";
+import {postJson} from "Utils/fetchUtils";
 
 const AdminCalendar = () => {
 	const [state, setState] = useState({
@@ -9,32 +9,28 @@ const AdminCalendar = () => {
 
 	const fetchList = useCallback(() => {
 		postJson("/api/bundler", {
-			url: "/items",
-			query: [
-				"id",
-				"ammount",
-				"dueDate",
-				"asdfg",
-				"altName",
-				{
-					"color": [
-						"id",
-						"name"
-					],
-					"ddt": [
-						"code",
-						{
-							"customer": "name"
-						}
-					],
-					"model": [
-						"name",
-						"code"
-					]
+			query: `
+			items{
+				id,
+				ammount,
+				dueDate,
+				altName,
+				colors{
+					id,
+					name
+				},
+				ddt{
+					id,
+					code, 
+					customers{name}
+				},
+				models{
+					name, 
+					code
 				}
-			]
+			}`
 		}).then(list => {
-			setState({ list: list.collection });
+			setState({list: list.collection});
 		});
 		console.log("fetching");
 		//fetch("/api/items").then(res => res.json()).then(list => setState({list: list.collection}));
