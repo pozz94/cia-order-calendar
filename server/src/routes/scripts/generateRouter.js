@@ -1,6 +1,7 @@
 import express from "express";
 import {query} from "dbUtils";
 import {prepareOptions} from "apiUtils";
+import {postJson} from "fetchUtils";
 
 const generateRouter = (table, aliases) => {
 	const router = express.Router();
@@ -30,6 +31,7 @@ const generateRouter = (table, aliases) => {
 				.join(", ")}); SELECT LAST_INSERT_ID() AS id;`,
 			values,
 			items => {
+				postJson(req.rootUrl + "/update", {type: table});
 				const id = items[items.length - 1][0].id;
 				res.json({url: [req.currentUrl, id].join("/"), id});
 			}
@@ -63,15 +65,21 @@ const generateRouter = (table, aliases) => {
 
 		const id = parseInt(req.params.id);
 
-		query(`UPDATE \`${table}\` SET ${columns} WHERE \`ID\`= ?`, [...values, id], () =>
-			res.json({url: req.currentUrl, id})
-		);
+		query(`UPDATE \`${table}\` SET ${columns} WHERE \`ID\`= ?`, [...values, id], () => {
+			postJson(req.rootUrl + "/update", {
+				type: table
+			});
+			res.json({url: req.currentUrl, id});
+		});
 	});
 
 	router.delete("/:id([0-9]+)", (req, res, next) => {
 		const id = parseInt(req.params.id);
 
 		query(`DELETE FROM \`${table}\` WHERE \`${aliases["id"]}\` = ?`, [id], ans => {
+			postJson(req.rootUrl + "/update", {
+				type: table
+			});
 			if (ans.affectedRows !== 0) res.json({success: "Yeah!!!"});
 			else res.status(404).json({error: "not found"});
 		});

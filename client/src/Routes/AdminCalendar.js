@@ -39,7 +39,7 @@ const AdminCalendar = () => {
 	const messageHandler = useCallback(
 		event => {
 			const data = JSON.parse(event.data);
-			if (data === "list") fetchList();
+			if (data === "items") fetchList();
 		},
 		[fetchList]
 	);
