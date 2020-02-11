@@ -2,6 +2,7 @@ import express from "express";
 import nearley from "nearley";
 import grammar from "./scripts/bundleGrammar";
 import getBundle from "./scripts/getBundle";
+import setBundle from "./scripts/setBundle";
 import type from "typeCheck.js";
 
 const router = express.Router();
@@ -14,7 +15,7 @@ router.post("/", async (req, res, next) => {
 
 		res.json(await getBundle(req.rootUrl, bundleParser.results[0]));
 	} else if (type(req.body.query) === "object") {
-		res.json(await bundle);
+		res.json(await setBundle(req.rootUrl, req.body.query));
 	}
 });
 

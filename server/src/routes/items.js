@@ -1,4 +1,6 @@
-import generateRouter from "generateRouter";
+import generateRouter from "./scripts/generateRouter";
+
+const table = "items";
 
 const aliases = {
 	id: "ID",
@@ -12,8 +14,6 @@ const aliases = {
 	highlightColor: "HighlightColor",
 	itemKey: "ItemKey"
 };
-
-const table = "items";
 
 const router = generateRouter(table, aliases);
 

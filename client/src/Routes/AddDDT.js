@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import DDTFormField from "./Components/DDTFormField";
 import ItemFormField from "./Components/ItemFormField";
-import {putJson, postJson, deleteJson} from "Utils/fetchUtils";
+import {postJson, deleteJson} from "Utils/fetchUtils";
 import c from "./AddDDT.module.css";
 import queryString from "query-string";
 
@@ -9,7 +9,7 @@ const hash = () => [...Array(16)].map(i => (~~(Math.random() * 36)).toString(36)
 
 class AddDDT extends Component {
 	state = {
-		Items: [],
+		items: [],
 		ddtData: {
 			customers: {},
 			code: "",
@@ -18,29 +18,7 @@ class AddDDT extends Component {
 	};
 
 	handleSubmit = async event => {
-		event.preventDefault();
-
-		const Items = this.state.Items.filter(
-			item =>
-				item.value.ammount &&
-				item.value.model.code &&
-				item.value.model.name &&
-				item.value.color.name &&
-				item.value.dueDate
-		);
-
-		console.log("posting");
-
-		const ddt = await putJson(`/api/ddt`, this.state.ddtData);
-
-		this.setState({...this.state, Items});
-
-		Items.map(async ({value: item}) => {
-			item.Color = await postJson("/api/colors", item.Color);
-			item.Model = await postJson("/api/models", item.Model);
-			item.DDT = ddt;
-			putJson("/api/items", item);
-		});
+		//TODO
 	};
 
 	fetchDDT = async (ddtData, callback = null) => {
@@ -80,7 +58,7 @@ class AddDDT extends Component {
 						...list.collection[0].ddt,
 						date: list.collection[0].ddt.date.slice(0, 10)
 					},
-					Items: list.collection
+					items: list.collection
 				},
 				() => {
 					callback && callback();
@@ -93,7 +71,7 @@ class AddDDT extends Component {
 						...this.state.ddtData,
 						"@self": undefined
 					},
-					Items: []
+					items: []
 				},
 				() => {
 					callback && callback();
@@ -103,10 +81,10 @@ class AddDDT extends Component {
 	};
 
 	addItem = () => {
-		const lastItem = (this.state.Items.slice(-1)[0] && this.state.Items.slice(-1)[0]) || {};
-		//console.log(JSON.stringify(this.state.Items.slice(-1), null, 2));
-		const Items = [
-			...this.state.Items,
+		const lastItem = (this.state.items.slice(-1)[0] && this.state.items.slice(-1)[0]) || {};
+
+		const items = [
+			...this.state.items,
 			{
 				models: {},
 				colors: {},
@@ -117,24 +95,29 @@ class AddDDT extends Component {
 				itemKey: hash()
 			}
 		];
-		this.setState({Items});
+		this.setState({items});
 	};
 
 	refreshItem = key => value => {
-		const Items = this.state.Items.map(item => {
+		const items = this.state.items.map(item => {
 			if (item.itemKey === key) return {...value, itemKey: key};
 			return item;
 		});
-		this.setState({Items});
+		this.setState({items});
 	};
 
 	deleteItem = key => () => {
-		const Item = this.state.Items.filter(item => item.itemKey === key)[0];
+		console.log("deleting");
+		const Item = this.state.items.filter(item => item.itemKey === key)[0];
 		if (Item["@self"] && Item["@self"].url) {
-			deleteJson(Item["@self"].url).then(() => this.fetchDDT(this.state.ddtData, this.addItem));
+			console.log("deleting from db");
+			deleteJson(Item["@self"].url).then(res => {
+				console.log("deleted", res);
+				this.fetchDDT(this.state.ddtData, this.addItem);
+			});
 		} else {
-			const Items = this.state.Items.filter(item => item.itemKey !== key);
-			this.setState({Items});
+			const items = this.state.items.filter(item => item.itemKey !== key);
+			this.setState({items});
 		}
 	};
 
@@ -157,10 +140,10 @@ class AddDDT extends Component {
 				addItem={this.addItem}
 				fetchDDT={this.fetchDDT}
 			/>
-			{this.state.Items.length ? (
+			{this.state.items.length ? (
 				<React.Fragment>
 					<hr />
-					{this.state.Items.map((item, index) => {
+					{this.state.items.map((item, index) => {
 						return (
 							<ItemFormField
 								key={item.itemKey}
@@ -168,7 +151,7 @@ class AddDDT extends Component {
 								addNextItem={this.addItem}
 								deleteThisItem={this.deleteItem(item.itemKey)}
 								refreshThisItem={this.refreshItem(item.itemKey)}
-								isLast={this.state.Items.length - 1 === index}
+								isLast={this.state.items.length - 1 === index}
 							/>
 						);
 					})}

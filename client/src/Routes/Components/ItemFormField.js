@@ -5,6 +5,7 @@ import {BubblePreset} from "UI/CustomColorPicker/CustomColorPicker";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHighlighter, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import Date from "./Components/DateField";
+import {postJson} from "Utils/fetchUtils";
 
 class AddDDT extends Component {
 	state = {
@@ -46,8 +47,11 @@ class AddDDT extends Component {
 			this.props.value.colors.name &&
 			this.props.value.dueDate &&
 			this.props.isLast
-		)
-			this.props.addNextItem();
+		) {
+			postJson("/api/bundler", {query: {items: this.props.value}}).then(() =>
+				this.props.addNextItem()
+			);
+		}
 	};
 
 	componentDidMount = () => {
@@ -95,14 +99,14 @@ class AddDDT extends Component {
 					inputRef={setRef("itemName")}
 				/>
 				<InputSuggestion
-					placeholder="Descrizione alternativa"
+					placeholder="Descrizione Alternativa"
 					value={value}
 					whichProperty={"altName"}
 					query="items(altName=[%value%]){altName}"
 					setValue={setAltName}
 					onSelect={setFocus("color")}
 					onEnter={setFocus("color")}
-					inputRef={setRef("itemName")}
+					inputRef={setRef("altName")}
 				/>
 				<InputSuggestion
 					placeholder="Colore"

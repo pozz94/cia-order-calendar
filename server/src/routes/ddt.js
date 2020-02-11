@@ -1,4 +1,6 @@
-import generateRouter from "generateRouter";
+import generateRouter from "./scripts/generateRouter";
+
+const table = "ddt";
 
 const aliases = {
 	id: "ID",
@@ -6,8 +8,6 @@ const aliases = {
 	customers: "Customer",
 	date: "Date"
 };
-
-const table = "ddt";
 
 const router = generateRouter(table, aliases);
 
