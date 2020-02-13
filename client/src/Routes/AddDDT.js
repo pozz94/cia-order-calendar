@@ -87,7 +87,6 @@ class AddDDT extends Component {
 				);
 			}
 		} else {
-			alert("sending DDT");
 			postJson("/api/bundler", {query: {ddt: this.state.ddtData}}).then(() => {
 				this.fetchDDT(callback);
 			});
