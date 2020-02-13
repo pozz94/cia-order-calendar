@@ -33,7 +33,6 @@ const AdminCalendar = () => {
 			setState({list: list.collection});
 		});
 		console.log("fetching");
-		//fetch("/api/items").then(res => res.json()).then(list => setState({list: list.collection}));
 	}, []);
 
 	const messageHandler = useCallback(

@@ -15,11 +15,9 @@ const DDTFormField = props => {
 	const {customers, code, date} = props.ddtData;
 
 	const setFocus = toFocus => () => {
-		if (customers && code) {
-			props.fetchDDT(props.ddtData, () => {
-				if (customers && code && date) {
-					props.addItem();
-				}
+		if (customers && code && date) {
+			props.fetchDDT(() => {
+				props.addItem();
 			});
 		}
 		inputRefs[toFocus] && inputRefs[toFocus].focus();
@@ -41,7 +39,7 @@ const DDTFormField = props => {
 				whichProperty="name"
 				query="customers(name=[%value%]){id, name}"
 				setValue={value => {
-					props.setDDT({customers: value});
+					props.setDDT({customers: value, "@self": undefined, id: undefined});
 				}}
 				onSelect={setFocus("code")}
 				onEnter={setFocus("code")}
@@ -51,6 +49,8 @@ const DDTFormField = props => {
 				value={code || ""}
 				onChange={event =>
 					props.setDDT({
+						"@self": undefined,
+						id: undefined,
 						code: event.target.value
 					})
 				}
@@ -68,7 +68,7 @@ const DDTFormField = props => {
 				})}
 			/>
 			<input
-				value={date || ""}
+				value={(date && date.slice(0, 10)) || ""}
 				onChange={e => props.setDDT({date: e.target.value})}
 				className={c.date}
 				type="date"

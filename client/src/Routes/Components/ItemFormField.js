@@ -45,12 +45,13 @@ class AddDDT extends Component {
 			this.props.value.models.code &&
 			this.props.value.models.name &&
 			this.props.value.colors.name &&
-			this.props.value.dueDate &&
-			this.props.isLast
+			this.props.value.dueDate
 		) {
-			postJson("/api/bundler", {query: {items: this.props.value}}).then(() =>
-				this.props.addNextItem()
-			);
+			postJson("/api/bundler", {query: {items: this.props.value}}).then(() => {
+				if (this.props.isLast) {
+					this.props.addNextItem();
+				}
+			});
 		}
 	};
 
@@ -120,6 +121,7 @@ class AddDDT extends Component {
 				/>
 				<Date
 					value={value.dueDate.slice(0, 10)}
+					min={value.ddt.date.slice(0, 10)}
 					onChange={event => this.setValue("dueDate")(event.target.value)}
 					className={c.date}
 					placeholder="Consegna"
@@ -148,7 +150,7 @@ class AddDDT extends Component {
 					}
 					defaultColor={
 						"#" +
-						((value.highlightColor && value.highlightColor.toString(16).slice(0, -2)) || "fff")
+						((value.highlightColor && value.highlightColor.toString(16).slice(0, -2)) || "ffffff")
 					}
 					colors={[
 						"#fdb790",
@@ -157,7 +159,7 @@ class AddDDT extends Component {
 						"#92daf2",
 						"#f39efa",
 						"#dd3636",
-						"#eee",
+						"#eeeeee",
 						"white"
 					]}
 					format="hex"

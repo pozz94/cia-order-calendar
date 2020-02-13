@@ -4,7 +4,8 @@ const table = "colors";
 
 const aliases = {
 	id: "ID",
-	name: "Name"
+	name: "Name",
+	date: "Date"
 };
 
 const router = generateRouter(table, aliases);

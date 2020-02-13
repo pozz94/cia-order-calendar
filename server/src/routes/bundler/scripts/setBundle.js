@@ -8,7 +8,11 @@ const setBundle = async (rootUrl, bundle) => {
 
 	let newBundle = await Promise.all(
 		Object.keys(bundle).map(async element => {
-			if (type(bundle[element]) === "string") {
+			if (
+				type(bundle[element]) === "string" ||
+				type(bundle[element]) === "number" ||
+				type(bundle[element]) === "boolean"
+			) {
 				return {[element]: bundle[element]};
 			} else if (type(bundle[element]) === "object") {
 				let response;
