@@ -15,7 +15,8 @@ router.get("/", (req, res, next) => {
 
 router.post("/", (req, res, next) => {
 	res.app.emit("update", req.body.type);
-	res.end();
+	res.json({success: true});
+	//res.end();
 });
 
 export default router;
