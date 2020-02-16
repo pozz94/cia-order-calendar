@@ -21,15 +21,27 @@ const generateRouter = (table, aliases) => {
 			element !== "id" && req.body[element] ? true : false
 		);
 
-		const columns = aliasesArray.map(element => aliases[element]).join(", ");
+		let columns, updates, values;
 
-		const values = aliasesArray.map(element => req.body[element]);
+		aliasesArray.forEach(element => {
+			columns = [...(columns || []), aliases[element]];
+			updates = [...(updates || []), `\`${aliases[element]}\`=?`];
+			values = [...(values || []), req.body[element]];
+		});
+
+		columns = columns.join(", ");
+		updates = updates.join(", ");
 
 		query(
-			`INSERT INTO \`${table}\` (${columns}) VALUES (${aliasesArray
-				.map(() => "?")
-				.join(", ")}); SELECT LAST_INSERT_ID() AS id;`,
-			values,
+			`
+				INSERT INTO \`${table}\` (${columns}) 
+					VALUES (${aliasesArray.map(() => "?").join(", ")})
+					ON DUPLICATE KEY UPDATE
+						\`${aliases["id"]}\` = LAST_INSERT_ID(\`${aliases["id"]}\`),
+						${updates};
+				SELECT LAST_INSERT_ID() AS id;
+			`.replace(/\s+/g, " "),
+			[...values, ...values],
 			items => {
 				postJson(req.rootUrl + "/update", {type: table});
 				const id = items[items.length - 1][0].id;
@@ -59,13 +71,18 @@ const generateRouter = (table, aliases) => {
 			element !== "id" && req.body[element] ? true : false
 		);
 
-		const columns = aliasesArray.map(element => `\`${aliases[element]}\`=?`).join(", ");
+		let updates, values;
 
-		const values = aliasesArray.map(element => req.body[element]);
+		aliasesArray.forEach(element => {
+			updates = [...(updates || []), `\`${aliases[element]}\`=?`];
+			values = [...(values || []), req.body[element]];
+		});
+
+		updates = updates.join(", ");
 
 		const id = parseInt(req.params.id);
 
-		query(`UPDATE \`${table}\` SET ${columns} WHERE \`ID\`= ?`, [...values, id], () => {
+		query(`UPDATE \`${table}\` SET ${updates} WHERE \`ID\`= ?`, [...values, id], () => {
 			postJson(req.rootUrl + "/update", {
 				type: table
 			});

@@ -36,7 +36,7 @@ const setBundle = async (rootUrl, bundle) => {
 		"@self": self || undefined,
 		...newBundle.reduce((a, b) => {
 			return {...a, ...b};
-		})
+		}, {})
 	};
 };
 

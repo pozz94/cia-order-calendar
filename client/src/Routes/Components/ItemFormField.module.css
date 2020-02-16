@@ -4,3 +4,9 @@
 .date {
 	width: 8rem;
 }
+.container {
+	transition: background-color 0.2s ease;
+}
+.incomplete:not(:focus-within) {
+	background: #fef1d7;
+}

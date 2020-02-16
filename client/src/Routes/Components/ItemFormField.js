@@ -6,10 +6,14 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHighlighter, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import Date from "./Components/DateField";
 import {postJson} from "Utils/fetchUtils";
+//import debounce from "Utils/debounceEvent";
+import debounced from "Utils/returnDebouncedFunction";
 
 class AddDDT extends Component {
 	state = {
-		dateFieldType: "text"
+		dateFieldType: "text",
+		lastSubmittedValue: null,
+		edited: false
 	};
 
 	inputRefs = {};
@@ -27,7 +31,13 @@ class AddDDT extends Component {
 
 	setFocus = toFocus => () => {
 		this.inputRefs[toFocus] && this.inputRefs[toFocus].focus();
-		this.addNextItemIfComplete();
+		this.ifComplete(() => {
+			setTimeout(() => {
+				if (this.props.isLast) {
+					this.props.addNextItem();
+				}
+			}, 0);
+		});
 	};
 
 	setInputRefs = name => ref => (this.inputRefs[name] = ref);
@@ -39,7 +49,7 @@ class AddDDT extends Component {
 		}
 	};
 
-	addNextItemIfComplete = () => {
+	ifComplete = (callback, elseCallback = () => {}) => {
 		if (
 			this.props.value.ammount &&
 			this.props.value.models.code &&
@@ -47,16 +57,56 @@ class AddDDT extends Component {
 			this.props.value.colors.name &&
 			this.props.value.dueDate
 		) {
-			postJson("/api/bundler", {query: {items: this.props.value}}).then(() => {
-				if (this.props.isLast) {
-					this.props.addNextItem();
-				}
-			});
+			callback(this.props.value);
+		} else {
+			elseCallback(this.props.value);
 		}
 	};
 
+	submit = (callback = () => {}) => value => {
+		if (
+			this.state.lastSubmittedValue &&
+			JSON.stringify(this.state.lastSubmittedValue) !== JSON.stringify(this.props)
+		) {
+			console.log("submitting");
+			this.setState({edited: true, lastSubmittedValue: value}, () => {
+				postJson("/api/bundler", {
+					query: {
+						items: value
+					}
+				}).then(() => {
+					callback();
+				});
+			});
+		} else {
+			console.log("not submitting");
+			this.setState({edited: false, lastSubmittedValue: value});
+		}
+	};
+
+	handleSubmit = debounced(currentTarget => {
+		setTimeout(() => {
+			if (!currentTarget.contains(document.activeElement)) {
+				this.ifComplete(this.submit());
+			}
+		}, 0);
+	});
+
 	componentDidMount = () => {
 		window.requestAnimationFrame(this.setFocus("ammount"));
+		this.ifComplete(
+			() => {},
+			() => this.setState({edited: false, lastSubmittedValue: this.props.value})
+		);
+	};
+
+	componentDidUpdate = prevProps => {
+		if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
+			this.ifComplete(
+				() => this.setState({className: c.complete}),
+				() => this.setState({className: c.incomplete})
+			);
+		}
 	};
 
 	render = () => {
@@ -64,7 +114,12 @@ class AddDDT extends Component {
 		const {deleteThisItem, value} = this.props;
 
 		return (
-			<div>
+			<div
+				onBlur={e => {
+					this.handleSubmit(e.currentTarget);
+				}}
+				className={[c.container, this.state.className].join(" ")}
+			>
 				<input
 					value={value.ammount || ""}
 					onChange={e => this.setValue("ammount")(e.target.value)}
@@ -183,6 +238,7 @@ class AddDDT extends Component {
 				>
 					<FontAwesomeIcon icon={faTrashAlt} color="#FFFFFF" style={{fontSize: "1.25rem"}} />
 				</button>
+				<span>{this.state.edited ? "edited" : "same"}</span>
 			</div>
 		);
 	};

@@ -4,7 +4,6 @@ import ItemFormField from "./Components/ItemFormField";
 import {postJson, deleteJson} from "Utils/fetchUtils";
 import c from "./AddDDT.module.css";
 import queryString from "query-string";
-import {withRouter} from "react-router-dom";
 
 const hash = () => [...Array(16)].map(i => (~~(Math.random() * 36)).toString(36)).join("");
 
@@ -136,7 +135,8 @@ class AddDDT extends Component {
 
 	messageHandler = event => {
 		const data = JSON.parse(event.data);
-		if (data === "items") this.fetchDDT();
+		//console.log(data);
+		if (data === "items") this.fetchDDT(); //this.addItem);
 	};
 
 	setDDT = ddtData => {
@@ -148,6 +148,7 @@ class AddDDT extends Component {
 		const {id} = queryString.parse(this.props.location.search);
 		if (id) {
 			this.fetchDDT();
+			//this.fetchDDT(this.addItem);
 		}
 	};
 
@@ -189,9 +190,9 @@ class AddDDT extends Component {
 			</button>
 			<input type="submit" value="Conferma" />
 			<hr />
-			<pre>{JSON.stringify(this.state.ddtData, null, 4)}</pre>
+			<pre>{JSON.stringify(this.state, null, 4)}</pre>
 		</form>
 	);
 }
 
-export default withRouter(AddDDT);
+export default AddDDT;
