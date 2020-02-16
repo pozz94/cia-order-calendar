@@ -30,7 +30,7 @@ const AdminCalendar = () => {
 				}
 			}`
 		}).then(list => {
-			setState({list: list.collection});
+			setState({list: list.collection.sort((a, b) => (a.dueDate > b.dueDate ? -1 : 1))});
 		});
 		console.log("fetching");
 	}, []);
