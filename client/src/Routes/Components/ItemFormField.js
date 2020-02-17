@@ -19,7 +19,10 @@ class AddDDT extends Component {
 	inputRefs = {};
 
 	setValue = whatValue => value => {
-		this.props.refreshThisItem({...this.props.value, [whatValue]: value});
+		this.props.refreshThisItem({
+			...this.props.value,
+			[whatValue]: value
+		});
 	};
 
 	setAltName = value => {
@@ -238,7 +241,9 @@ class AddDDT extends Component {
 				>
 					<FontAwesomeIcon icon={faTrashAlt} color="#FFFFFF" style={{fontSize: "1.25rem"}} />
 				</button>
-				<span>{this.state.edited ? "edited" : "same"}</span>
+				{
+					//<span>{this.state.edited ? "edited" : "same"}</span>
+				}
 			</div>
 		);
 	};

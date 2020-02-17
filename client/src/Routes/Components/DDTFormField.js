@@ -16,7 +16,7 @@ const DDTFormField = props => {
 
 	const setFocus = toFocus => () => {
 		if (customers && code && date) {
-			props.fetchDDT(props.addItem);
+			props.fetchDDT();
 		}
 		inputRefs[toFocus] && inputRefs[toFocus].focus();
 	};
@@ -24,13 +24,29 @@ const DDTFormField = props => {
 		if (ref !== null) inputRefs[name] = ref;
 	};
 
+	const handleSubmit = (currentTarget) =>
+	{
+		setTimeout(() => {
+			if (!currentTarget.contains(document.activeElement)) {
+				if (customers && code && date) {
+					props.fetchDDT();
+				}
+			}
+		}, 0);
+	}
+
 	useEffect(() => {
 		window.requestAnimationFrame(setFocus("customer"));
 		// eslint-disable-next-line
 	}, []);
 
 	return (
-		<React.Fragment>
+		<div
+			onBlur={e => {
+				handleSubmit(e.currentTarget)
+				
+			}}
+		>
 			<InputSuggestion
 				placeholder="Cliente"
 				value={props.ddtData.customers}
@@ -77,7 +93,7 @@ const DDTFormField = props => {
 						date: event.target.value
 					});
 					setFocus("number")();
-					if (customers && code && date) props.addItem();
+					if (customers && code && date) props.fetchDDT();
 				})}
 				onKeyDown={event => {
 					if (event.keyCode === 9) {
@@ -87,7 +103,7 @@ const DDTFormField = props => {
 					}
 				}}
 			/>
-		</React.Fragment>
+		</div>
 	);
 };
 

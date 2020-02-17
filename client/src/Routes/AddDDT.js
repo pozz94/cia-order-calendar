@@ -21,7 +21,8 @@ class AddDDT extends Component {
 		//TODO
 	};
 
-	fetchDDT = async (callback = () => {}) => {
+	fetchDDT = async (callback = () => { }) => {
+		console.log("fetching DDT");
 		const {id} = queryString.parse(this.props.location.search);
 		let query;
 		if (this.state.ddtData.id) {
@@ -45,6 +46,8 @@ class AddDDT extends Component {
 			`
 		});
 		if (!ddtData.error && ddtData.collection.length && ddtData.collection[0]) {
+			this.props.history.push(`/add-ddt?id=${ddtData.collection[0].id}`)
+			//window.history.pushState("", "", `/add-ddt?id=${ddtData.collection[0].id}`);
 			const list = await postJson("/api/bundler", {
 				query: `
 					items{
@@ -67,12 +70,19 @@ class AddDDT extends Component {
 				`
 			});
 			if (!list.error && list.collection.length && list.collection[0].ddt) {
-				const currentItem = this.state.items[this.state.items.length - 1];
+				let items = this.state.items.map((item) => {
+					const index = list.collection.findIndex(obj => obj.itemKey === item.itemKey)
+					item = list.collection[index] || item
+					list.collection.splice(index, 1);
+					return item;
+				});
+
+				items = [...items, ...list.collection];
+				
 				this.setState(
 					{
 						ddtData: ddtData.collection[0],
-						//items: list.collection
-						items: [...list.collection, ...(currentItem ? [currentItem] : [])]
+						items
 					},
 					callback
 				);
@@ -80,9 +90,14 @@ class AddDDT extends Component {
 				this.setState(
 					{
 						ddtData: ddtData.collection[0],
-						items: []
+						items: [...this.state.items]
 					},
-					callback
+					() => {
+						if (!this.state.items.length) { 
+							this.addItem();
+						}
+						callback()
+					}
 				);
 			}
 		} else {
@@ -135,8 +150,7 @@ class AddDDT extends Component {
 
 	messageHandler = event => {
 		const data = JSON.parse(event.data);
-		//console.log(data);
-		if (data === "items") this.fetchDDT(); //this.addItem);
+		if (data === "items") this.fetchDDT();
 	};
 
 	setDDT = ddtData => {
@@ -183,7 +197,7 @@ class AddDDT extends Component {
 			<button
 				onClick={e => {
 					e.preventDefault();
-					this.addItem();
+					this.fetchDDT();
 				}}
 			>
 				Aggiungi oggetto
