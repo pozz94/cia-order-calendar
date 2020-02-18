@@ -71,12 +71,12 @@ class AddDDT extends Component {
 			});
 			if (!list.error && list.collection.length && list.collection[0].ddt) {
 				let items = this.state.items.map((item) => {
-					const index = list.collection.findIndex(obj => obj.itemKey === item.itemKey)
-					item = list.collection[index] || item
+					const index = list.collection.findIndex(obj => obj.itemKey === item.itemKey);
+					item = list.collection[index] || item;
 					list.collection.splice(index, 1);
 					return item;
 				});
-
+				
 				items = [...items, ...list.collection];
 				
 				this.setState(
@@ -90,7 +90,10 @@ class AddDDT extends Component {
 				this.setState(
 					{
 						ddtData: ddtData.collection[0],
-						items: [...this.state.items]
+						items: this.state.items.map(item => {
+							item.ddt = ddtData.collection[0];
+							return item;
+						})
 					},
 					() => {
 						if (!this.state.items.length) { 
@@ -135,15 +138,15 @@ class AddDDT extends Component {
 
 	deleteItem = key => () => {
 		const Item = this.state.items.filter(item => item.itemKey === key)[0];
-		if (Item["@self"] && Item["@self"].url) {
-			console.log("deleting from db");
-			deleteJson(Item["@self"].url).then(res => {
-				console.log("deleted", res);
-			});
-		} else {
-			const items = this.state.items.filter(item => item.itemKey !== key);
-			this.setState({items});
-		}
+		const items = this.state.items.filter(item => item.itemKey !== key);
+		this.setState({ items }, () => {
+			if (Item["@self"] && Item["@self"].url) {
+				console.log("deleting from db");
+				deleteJson(Item["@self"].url).then(res => {
+					console.log("deleted", res);
+				});
+			}
+		});
 	};
 
 	source = new EventSource("api/update");
@@ -162,7 +165,6 @@ class AddDDT extends Component {
 		const {id} = queryString.parse(this.props.location.search);
 		if (id) {
 			this.fetchDDT();
-			//this.fetchDDT(this.addItem);
 		}
 	};
 
@@ -197,7 +199,7 @@ class AddDDT extends Component {
 			<button
 				onClick={e => {
 					e.preventDefault();
-					this.fetchDDT();
+					this.fetchDDT(this.addItem());
 				}}
 			>
 				Aggiungi oggetto
