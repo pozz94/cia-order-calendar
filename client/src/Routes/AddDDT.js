@@ -72,11 +72,13 @@ class AddDDT extends Component {
 			if (!list.error && list.collection.length && list.collection[0].ddt) {
 				let items = this.state.items.map((item) => {
 					const index = list.collection.findIndex(obj => obj.itemKey === item.itemKey);
+					item = (item["@self"]) ? null : item;
 					item = list.collection[index] || item;
-					list.collection.splice(index, 1);
+					if(index>=0)
+						list.collection.splice(index, 1);
 					return item;
-				});
-				
+				}).filter(item=>item!==null);
+
 				items = [...items, ...list.collection];
 				
 				this.setState(
@@ -153,6 +155,7 @@ class AddDDT extends Component {
 
 	messageHandler = event => {
 		const data = JSON.parse(event.data);
+		console.log(data);
 		if (data === "items") this.fetchDDT();
 	};
 
