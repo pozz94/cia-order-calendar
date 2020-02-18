@@ -1,0 +1,7 @@
+.highlightColor{
+	display: inline-block;
+	width: 2rem;
+	height: 1rem;
+	border-radius: 0.375rem;
+	border: 1px solid lightgray;
+}

@@ -15,6 +15,7 @@ import Layout from "./Layouts/Layout";
 
 //routes
 import AdminCalendar from "./Routes/AdminCalendar";
+import UserCalendar from "./Routes/UserCalendar"
 import AddDDT from "./Routes/AddDDT";
 import NotFound from "./Routes/404";
 
@@ -90,6 +91,7 @@ class App extends Component {
 						<Switch>
 							<Route exact path="/" component={AdminCalendar} />
 							<Route path="/add-ddt" component={AddDDT} />
+							<Route path="/user-calendar" component={UserCalendar} />
 							<Route component={NotFound} />
 						</Switch>
 					</Layout>

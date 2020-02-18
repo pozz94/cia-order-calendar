@@ -208,8 +208,6 @@ class AddDDT extends Component {
 				Aggiungi oggetto
 			</button>
 			<input type="submit" value="Conferma" />
-			<hr />
-			<pre>{JSON.stringify(this.state, null, 4)}</pre>
 		</form>
 	);
 }

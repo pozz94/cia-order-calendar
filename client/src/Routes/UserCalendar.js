@@ -1,5 +1,5 @@
 import React, {useState, useRef, useCallback, useEffect} from "react";
-import AdminList from "./Components/AdminList";
+import AdminList from "./Components/UserList";
 import {postJson} from "Utils/fetchUtils";
 
 const AdminCalendar = () => {
@@ -31,7 +31,14 @@ const AdminCalendar = () => {
 				}
 			}`
 		}).then(list => {
-			setState({list: list.collection.sort((a, b) => (a.dueDate > b.dueDate ? -1 : 1))});
+			setState({
+				list: list.collection
+					.sort((a, b) => (a.dueDate < b.dueDate ? -1 : 1))
+					.filter((item => {
+						console.log(item.dueDate, new Date().toISOString().slice(0,10))
+						return item.dueDate >= new Date().toISOString().slice(0,10)
+					}))
+			});
 		});
 		console.log("fetching");
 	}, []);

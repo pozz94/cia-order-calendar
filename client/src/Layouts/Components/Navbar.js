@@ -31,6 +31,9 @@ const navBar = () => (
 						>
 							Test
 						</button>
+						<Link to="/user-calendar">
+							<button>Calendario Operatori</button>
+						</Link>
 						<Link to="/add-ddt">
 							<button>Nuovo ordine</button>
 						</Link>
