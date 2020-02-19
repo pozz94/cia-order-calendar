@@ -12,8 +12,7 @@ import debounced from "Utils/returnDebouncedFunction";
 class AddDDT extends Component {
 	state = {
 		dateFieldType: "text",
-		lastSubmittedValue: null,
-		edited: false
+		lastSubmittedValue: null
 	};
 
 	inputRefs = {};
@@ -66,31 +65,29 @@ class AddDDT extends Component {
 		}
 	};
 
-	submit = (callback = () => {}) => value => {
+	submit = value => {
 		if (
 			this.state.lastSubmittedValue &&
-			JSON.stringify(this.state.lastSubmittedValue) !== JSON.stringify(this.props)
+			JSON.stringify(this.state.lastSubmittedValue) !== JSON.stringify(value)
 		) {
 			console.log("submitting");
-			this.setState({edited: true, lastSubmittedValue: value}, () => {
+			this.setState({lastSubmittedValue: value}, () => {
 				postJson("/api/bundler", {
 					query: {
 						items: value
 					}
-				}).then(() => {
-					callback();
-				});
+				})
 			});
 		} else {
 			console.log("not submitting");
-			this.setState({edited: false, lastSubmittedValue: value});
+			this.setState({lastSubmittedValue: value});
 		}
 	};
 
 	handleSubmit = debounced(currentTarget => {
 		setTimeout(() => {
 			if (!currentTarget.contains(document.activeElement)) {
-				this.ifComplete(this.submit());
+				this.ifComplete(this.submit);
 			}
 		}, 0);
 	});
@@ -99,7 +96,7 @@ class AddDDT extends Component {
 		window.requestAnimationFrame(this.setFocus("ammount"));
 		this.ifComplete(
 			() => {},
-			() => this.setState({edited: false, lastSubmittedValue: this.props.value})
+			() => this.setState({lastSubmittedValue: this.props.value})
 		);
 	};
 
@@ -241,9 +238,6 @@ class AddDDT extends Component {
 				>
 					<FontAwesomeIcon icon={faTrashAlt} color="#FFFFFF" style={{fontSize: "1.25rem"}} />
 				</button>
-				{
-					//<span>{this.state.edited ? "edited" : "same"}</span>
-				}
 			</div>
 		);
 	};

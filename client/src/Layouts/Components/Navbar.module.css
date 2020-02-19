@@ -16,3 +16,15 @@
 	display: flex;
 	align-items: center;
 }
+
+.header a {
+	color: var(--main);
+	text-decoration: none;
+	display: inline-block;
+	margin: 0 1rem;
+	font-weight: 500;
+}
+
+.header a:hover {
+	color: var(--active);
+}

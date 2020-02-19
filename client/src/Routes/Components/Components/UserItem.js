@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 const item = props => {
 	const name = props.data.altName ? props.data.altName : props.data.models.name;

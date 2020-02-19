@@ -33,7 +33,18 @@ const AdminCalendar = () => {
 		}).then(list => {
 			setState({
 				list: list.collection
-					.sort((a, b) => (a.dueDate < b.dueDate ? -1 : 1))
+					.sort((a, b) => {
+						if (a.dueDate === b.dueDate) {
+							if (a.ddt.customers.name === b.ddt.customers.name) {
+								if (a.colors.name === b.colors.name) {
+									return a.models.code < b.models.code ? -1 : 1;
+								}
+								return a.colors.name < b.colors.name ? -1 : 1;
+							}
+							return a.ddt.customers.name < b.ddt.customers.name ? -1 : 1;
+						}
+						return a.dueDate < b.dueDate ? -1 : 1;
+					})
 					.filter((item => {
 						console.log(item.dueDate, new Date().toISOString().slice(0,10))
 						return item.dueDate >= new Date().toISOString().slice(0,10)

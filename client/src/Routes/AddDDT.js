@@ -46,8 +46,11 @@ class AddDDT extends Component {
 			`
 		});
 		if (!ddtData.error && ddtData.collection.length && ddtData.collection[0]) {
-			this.props.history.push(`/add-ddt?id=${ddtData.collection[0].id}`)
-			//window.history.pushState("", "", `/add-ddt?id=${ddtData.collection[0].id}`);
+			const { id } = queryString.parse(this.props.location.search);
+			if (!id || parseInt(id) !== ddtData.collection[0].id) {
+				console.log("pushing history");
+				this.props.history.push(`/add-ddt?id=${ddtData.collection[0].id}`);
+			}
 			const list = await postJson("/api/bundler", {
 				query: `
 					items{

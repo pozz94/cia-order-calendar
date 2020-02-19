@@ -13,6 +13,15 @@ const navBar = () => (
 			<modalContext.Consumer>
 				{context => (
 					<React.Fragment>
+						<Link to="/">
+							Calendario Amministratore
+						</Link>
+						<Link to="/user-calendar">
+							Calendario Operatori
+						</Link>
+						<Link to="/add-ddt">
+							<button>Nuovo ordine</button>
+						</Link>
 						<button
 							onClick={() =>
 								context.displayModal({
@@ -31,12 +40,6 @@ const navBar = () => (
 						>
 							Test
 						</button>
-						<Link to="/user-calendar">
-							<button>Calendario Operatori</button>
-						</Link>
-						<Link to="/add-ddt">
-							<button>Nuovo ordine</button>
-						</Link>
 					</React.Fragment>
 				)}
 			</modalContext.Consumer>
