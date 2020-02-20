@@ -8,10 +8,14 @@
 		"client": "cd client && npm run start",
 		"server:dev": "cd server && npm run watch",
 		"server:setup": "cd server && npm install",
+		"server:build": "cd server && npm run build",
 		"client:setup": "cd client && npm install",
+		"client:build": "cd client && npm run build",
 		"start": "concurrently \"npm run server\" \"npm run client\"",
 		"dev": "SET NODE_ENV=development& concurrently \"npm run server:dev\" \"npm run client\"",
-		"setup": "npm install & npm run server:setup & npm run client:setup\""
+		"setup": "npm install & npm run server:setup & npm run client:setup\"",
+		"prebuild": "if exist build (rd /s /q build && md build) else md build",
+		"build": "npm run server:build && npm run client:build"
 	},
 	"author": "Davide Pozzani",
 	"license": "ISC",

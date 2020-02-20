@@ -10,6 +10,7 @@
 		"dev": "npm run build:grammar & SET NODE_ENV=development& npm run server:dev",
 		"clean": "rimraf dist",
 		"build": "npm run build:grammar & babel ./src --out-dir dist",
+		"postbuild": "move dist ..\\build\\server",
 		"build:grammar": "nearleyc ./src/routes/bundler/scripts/bundleGrammar.ne -o ./src/routes/bundler/scripts/bundleGrammar.js",
 		"prod": "SET NODE_ENV=production& npm-run-all clean build server:prod",
 		"watch": "nodemon"

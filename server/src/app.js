@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import router from "./router";
+import fs from "fs";
 
 const app = express();
 
@@ -17,5 +18,13 @@ app.use((req, res, next) => {
 });
 
 app.use("/api", router("./routes"));
+
+const buildPath = path.join(__dirname, '../client', 'index.html');
+
+if (!process.env.NODE_ENV===development&&fs.existsSync(buildPath)) {
+	app.get("/", (req, res) =>
+		res.sendFile(buildPath)
+	);
+}
 
 export default app;
