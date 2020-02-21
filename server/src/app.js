@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import router from "./router";
 import fs from "fs";
+import path from "path"
 
 const app = express();
 
@@ -17,12 +18,12 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use("/api", router("./routes"));
+app.use("/api", router);
 
 const buildPath = path.join(__dirname, '../client', 'index.html');
 
-if (!process.env.NODE_ENV===development&&fs.existsSync(buildPath)) {
-	app.get("/", (req, res) =>
+if (!process.env.NODE_ENV==="development" && fs.existsSync(buildPath)) {
+	app.get("/*", (req, res) =>
 		res.sendFile(buildPath)
 	);
 }
