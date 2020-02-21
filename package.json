@@ -12,7 +12,7 @@
 		"client:setup": "cd client && npm install",
 		"client:build": "cd client && npm run build",
 		"start": "concurrently \"npm run server\" \"npm run client\"",
-		"start:dist": "node ./build/server/bin/www",
+		"start:dist": "node ./build/server/server",
 		"dev": "SET NODE_ENV=development& concurrently \"npm run server:dev\" \"npm run client\"",
 		"setup": "npm install & npm run server:setup & npm run client:setup\"",
 		"prebuild": "if exist build (rd /s /q build && md build) else md build",
@@ -21,7 +21,8 @@
 	"author": "Davide Pozzani",
 	"license": "ISC",
 	"dependencies": {
-		"concurrently": "^5.0.0"
+		"concurrently": "^5.0.0",
+		"node-windows": "^1.0.0-beta.1"
 	},
 	"devDependencies": {
 		"prettier": "^1.19.1",
