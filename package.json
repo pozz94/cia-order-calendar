@@ -21,8 +21,7 @@
 	"author": "Davide Pozzani",
 	"license": "ISC",
 	"dependencies": {
-		"concurrently": "^5.0.0",
-		"node-windows": "^1.0.0-beta.1"
+		"concurrently": "^5.0.0"
 	},
 	"devDependencies": {
 		"prettier": "^1.19.1",

@@ -19,6 +19,7 @@ const basePackageValues = {
 	"dependencies": {
 		...clientPackage.dependencies,
 		"node-windows": "^1.0.0-beta.1",
+		"readline-sync": "^1.4.10"
 	}
 }
 
