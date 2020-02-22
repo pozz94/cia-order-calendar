@@ -13,9 +13,9 @@ const basePackageValues = {
 	},
 	scripts: {
 		setup: "npm install",
-		postsetup: "npm run install",
-		install: "node serviceScripts/install",
-		uninstall: "node serviceScripts/uninstall"
+		postsetup: "npm run install-service",
+		"install-service": "node serviceScripts/install",
+		"uninstall-service": "node serviceScripts/uninstall"
 	},
 	dependencies: {
 		...clientPackage.dependencies,
