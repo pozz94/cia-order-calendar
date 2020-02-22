@@ -24,8 +24,7 @@ const DDTFormField = props => {
 		if (ref !== null) inputRefs[name] = ref;
 	};
 
-	const handleSubmit = (currentTarget) =>
-	{
+	const handleSubmit = currentTarget => {
 		setTimeout(() => {
 			if (!currentTarget.contains(document.activeElement)) {
 				if (customers && code && date) {
@@ -33,7 +32,7 @@ const DDTFormField = props => {
 				}
 			}
 		}, 0);
-	}
+	};
 
 	useEffect(() => {
 		window.requestAnimationFrame(setFocus("customer"));
@@ -43,8 +42,7 @@ const DDTFormField = props => {
 	return (
 		<div
 			onBlur={e => {
-				handleSubmit(e.currentTarget)
-				
+				handleSubmit(e.currentTarget);
 			}}
 		>
 			<InputSuggestion

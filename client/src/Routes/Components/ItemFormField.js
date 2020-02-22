@@ -76,7 +76,7 @@ class AddDDT extends Component {
 					query: {
 						items: value
 					}
-				})
+				});
 			});
 		} else {
 			console.log("not submitting");

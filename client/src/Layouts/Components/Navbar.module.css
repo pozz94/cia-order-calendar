@@ -1,18 +1,17 @@
-.header{
+.header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	box-shadow: var(--shadow);
 }
 
-.logo{
+.logo {
 	height: 3.5rem;
 	width: 3.5rem;
-	margin: .75rem;
+	margin: 0.75rem;
 }
 
-.logoWrapper
-{
+.logoWrapper {
 	display: flex;
 	align-items: center;
 }

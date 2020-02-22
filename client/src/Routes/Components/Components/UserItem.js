@@ -6,7 +6,10 @@ const item = props => {
 	//date = new Date("2019-10-25");
 	const weekday = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
 
-	const highlightColor="#" + ((props.data.highlightColor && props.data.highlightColor.toString(16).slice(0, -2)) || "ffffff")
+	const highlightColor =
+		"#" +
+		((props.data.highlightColor && props.data.highlightColor.toString(16).slice(0, -2)) ||
+			"ffffff");
 
 	let formattedDate = "";
 
@@ -29,7 +32,7 @@ const item = props => {
 			<td>{props.data.colors.name}</td>
 			<td>{formattedDate}</td>
 
-			<td style={{ display: "none" }}>{JSON.stringify(props.data)}</td>
+			<td style={{display: "none"}}>{JSON.stringify(props.data)}</td>
 		</tr>
 	);
 };

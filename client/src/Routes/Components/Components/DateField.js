@@ -22,12 +22,7 @@ const Date = props => {
 	};
 
 	useEffect(() => {
-		if (
-			prevType === "text" &&
-			type === "date" &&
-			document.activeElement === input &&
-			!limiter
-		) {
+		if (prevType === "text" && type === "date" && document.activeElement === input && !limiter) {
 			setTimeout(() => {
 				window.focus();
 				if (document.activeElement) {

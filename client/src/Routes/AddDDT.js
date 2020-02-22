@@ -21,7 +21,7 @@ class AddDDT extends Component {
 		//TODO
 	};
 
-	fetchDDT = async (callback = () => { }) => {
+	fetchDDT = async (callback = () => {}) => {
 		console.log("fetching DDT");
 		const {id} = queryString.parse(this.props.location.search);
 		let query;
@@ -46,7 +46,7 @@ class AddDDT extends Component {
 			`
 		});
 		if (!ddtData.error && ddtData.collection.length && ddtData.collection[0]) {
-			const { id } = queryString.parse(this.props.location.search);
+			const {id} = queryString.parse(this.props.location.search);
 			if (!id || parseInt(id) !== ddtData.collection[0].id) {
 				console.log("pushing history");
 				this.props.history.push(`/add-ddt?id=${ddtData.collection[0].id}`);
@@ -73,17 +73,18 @@ class AddDDT extends Component {
 				`
 			});
 			if (!list.error && list.collection.length && list.collection[0].ddt) {
-				let items = this.state.items.map((item) => {
-					const index = list.collection.findIndex(obj => obj.itemKey === item.itemKey);
-					item = (item["@self"]) ? null : item;
-					item = list.collection[index] || item;
-					if(index>=0)
-						list.collection.splice(index, 1);
-					return item;
-				}).filter(item=>item!==null);
+				let items = this.state.items
+					.map(item => {
+						const index = list.collection.findIndex(obj => obj.itemKey === item.itemKey);
+						item = item["@self"] ? null : item;
+						item = list.collection[index] || item;
+						if (index >= 0) list.collection.splice(index, 1);
+						return item;
+					})
+					.filter(item => item !== null);
 
 				items = [...items, ...list.collection];
-				
+
 				this.setState(
 					{
 						ddtData: ddtData.collection[0],
@@ -101,10 +102,10 @@ class AddDDT extends Component {
 						})
 					},
 					() => {
-						if (!this.state.items.length) { 
+						if (!this.state.items.length) {
 							this.addItem();
 						}
-						callback()
+						callback();
 					}
 				);
 			}
@@ -144,7 +145,7 @@ class AddDDT extends Component {
 	deleteItem = key => () => {
 		const Item = this.state.items.filter(item => item.itemKey === key)[0];
 		const items = this.state.items.filter(item => item.itemKey !== key);
-		this.setState({ items }, () => {
+		this.setState({items}, () => {
 			if (Item["@self"] && Item["@self"].url) {
 				console.log("deleting from db");
 				deleteJson(Item["@self"].url).then(res => {

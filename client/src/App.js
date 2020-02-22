@@ -15,7 +15,7 @@ import Layout from "./Layouts/Layout";
 
 //routes
 import AdminCalendar from "./Routes/AdminCalendar";
-import UserCalendar from "./Routes/UserCalendar"
+import UserCalendar from "./Routes/UserCalendar";
 import AddDDT from "./Routes/AddDDT";
 import NotFound from "./Routes/404";
 

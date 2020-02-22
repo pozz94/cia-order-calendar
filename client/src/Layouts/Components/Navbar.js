@@ -13,12 +13,8 @@ const navBar = () => (
 			<modalContext.Consumer>
 				{context => (
 					<React.Fragment>
-						<Link to="/">
-							Calendario Amministratore
-						</Link>
-						<Link to="/user-calendar">
-							Calendario Operatori
-						</Link>
+						<Link to="/">Calendario Amministratore</Link>
+						<Link to="/user-calendar">Calendario Operatori</Link>
 						<Link to="/add-ddt">
 							<button>Nuovo ordine</button>
 						</Link>
