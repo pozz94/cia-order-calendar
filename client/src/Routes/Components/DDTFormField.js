@@ -87,16 +87,20 @@ const DDTFormField = props => {
 				placeholder="Data Consegna"
 				ref={setInputRefs("date")}
 				onKeyPress={onEnter(event => {
+					console.log(new Date(event.target.value).getFullYear());
 					props.setDDT({
-						date: event.target.value
+						date: event.target.value,
+						year: new Date(event.target.value).getFullYear()
 					});
 					setFocus("number")();
 					if (customers && code && date) props.fetchDDT();
 				})}
 				onKeyDown={event => {
 					if (event.keyCode === 9) {
+						console.log(new Date(event.target.value).getFullYear());
 						props.setDDT({
-							date: event.target.value
+							date: event.target.value,
+							year: new Date(event.target.value).getFullYear()
 						});
 					}
 				}}

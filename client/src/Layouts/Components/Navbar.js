@@ -2,6 +2,7 @@ import React from "react";
 import c from "./Navbar.module.css";
 import modalContext from "Contexts/modalContext";
 import {Link} from "react-router-dom";
+// eslint-disable-next-line
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 const navBar = () => (

@@ -9,24 +9,6 @@
 	width: -moz-fit-content;
 	height: 100%;
 	overflow: auto;
-	border-radius: 0.5rem;
-	box-shadow: var(--shadow);
-}
-
-.stickyhead {
-	position: absolute;
-	top: 0;
-	z-index: 1;
-	width: 100%;
-	height: var(--table-head-height);
-	margin-bottom: calc(-1 * var(--table-head-height));
-	background: var(--main-gradient);
-}
-
-.wrapper .scrollTrack {
-	height: calc(100% - var(--table-head-height) - 0.3rem);
-	top: auto;
-	bottom: 0.15rem;
 }
 
 .wrapper table {
@@ -47,11 +29,7 @@
 }
 
 .wrapper tbody tr {
-	border-top: 1px solid lightgray;
-}
-
-.wrapper tbody tr:nth-child(odd) {
-	background: #eee;
+	border-bottom: 0.25rem solid white;
 }
 
 .wrapper th {
@@ -63,4 +41,28 @@
 	top: 0;
 	z-index: 2;
 	white-space: nowrap;
+}
+
+.wrapper .labelsWrapper th {
+	top: 2.75rem;
+	font-size: 0.66rem;
+	line-height: 0.66rem;
+	background: #fff;
+	color: #000;
+	padding: 0.2rem 1rem;
+	height: auto;
+	border: none;
+}
+.wrapper .labelsWrapper {
+	border: none;
+}
+.wrapper .groupLabel th {
+	color: black;
+	background: #fff;
+	padding: 1.25rem 1rem 0.75rem 1rem;
+	height: 3.5rem;
+	border: none;
+}
+.wrapper .groupLabel {
+	border: none;
 }

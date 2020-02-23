@@ -46,7 +46,6 @@ const AdminCalendar = () => {
 						return a.dueDate < b.dueDate ? -1 : 1;
 					})
 					.filter(item => {
-						console.log(item.dueDate, new Date().toISOString().slice(0, 10));
 						return item.dueDate >= new Date().toISOString().slice(0, 10);
 					})
 			});

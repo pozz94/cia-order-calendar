@@ -11,8 +11,8 @@ class AddDDT extends Component {
 	state = {
 		items: [],
 		ddtData: {
-			customers: {},
-			code: "",
+			customers: null,
+			code: null,
 			date: new Date().toISOString().substr(0, 10)
 		}
 	};
@@ -45,7 +45,20 @@ class AddDDT extends Component {
 				}
 			`
 		});
-		if (!ddtData.error && ddtData.collection.length && ddtData.collection[0]) {
+		const isSameDDT =
+			JSON.stringify(ddtData.collection[0].customers) ===
+				JSON.stringify(this.state.ddtData.customers) &&
+			ddtData.collection[0].code === this.state.ddtData.code;
+		const ddtNotEmpty = this.state.ddtData.customers && this.state.ddtData.code;
+		console.log(
+			{isSameDDT, ddtNotEmpty, dateEqual: ddtData.collection[0].date === this.state.ddtData.date},
+			(isSameDDT && ddtData.collection[0].date === this.state.ddtData.date) || !ddtNotEmpty
+		);
+		if (
+			!ddtData.error &&
+			ddtData.collection[0] &&
+			((isSameDDT && ddtData.collection[0].date === this.state.ddtData.date) || !ddtNotEmpty)
+		) {
 			const {id} = queryString.parse(this.props.location.search);
 			if (!id || parseInt(id) !== ddtData.collection[0].id) {
 				console.log("pushing history");
@@ -109,7 +122,7 @@ class AddDDT extends Component {
 					}
 				);
 			}
-		} else {
+		} else if (ddtNotEmpty) {
 			postJson("/api/bundler", {query: {ddt: this.state.ddtData}}).then(() => {
 				this.fetchDDT(callback);
 			});
