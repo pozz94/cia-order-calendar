@@ -1,4 +1,5 @@
 import React from "react";
+import optimalTextColor from "Utils/optimalTextColor";
 
 const item = props => {
 	const name = props.data.altName ? props.data.altName : props.data.models.name;
@@ -24,7 +25,7 @@ const item = props => {
 	}
 
 	return (
-		<tr style={{backgroundColor: highlightColor}}>
+		<tr style={{backgroundColor: highlightColor, color: optimalTextColor(highlightColor)}}>
 			<td>{props.data.ammount}</td>
 			<td>{props.data.models.code}</td>
 			<td>{name}</td>

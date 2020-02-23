@@ -29,8 +29,8 @@ const generateRouter = (table, aliases) => {
 			values = [...(values || []), req.body[element]];
 		});
 
-		columns = columns.join(", ");
-		updates = updates.join(", ");
+		columns = columns && columns.join(", ");
+		updates = updates && updates.join(", ");
 
 		query(
 			`
