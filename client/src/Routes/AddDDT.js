@@ -45,19 +45,16 @@ class AddDDT extends Component {
 				}
 			`
 		});
-		const isSameDDT =
+		const isSameDDT = ddtData && ddtData.collection[0] &&
 			JSON.stringify(ddtData.collection[0].customers) ===
 				JSON.stringify(this.state.ddtData.customers) &&
 			ddtData.collection[0].code === this.state.ddtData.code;
 		const ddtNotEmpty = this.state.ddtData.customers && this.state.ddtData.code;
-		console.log(
-			{isSameDDT, ddtNotEmpty, dateEqual: ddtData.collection[0].date === this.state.ddtData.date},
-			(isSameDDT && ddtData.collection[0].date === this.state.ddtData.date) || !ddtNotEmpty
-		);
+
 		if (
 			!ddtData.error &&
 			ddtData.collection[0] &&
-			((isSameDDT && ddtData.collection[0].date === this.state.ddtData.date) || !ddtNotEmpty)
+			((isSameDDT && ddtData && ddtData.collection[0] && ddtData.collection[0].date === this.state.ddtData.date) || !ddtNotEmpty)
 		) {
 			const {id} = queryString.parse(this.props.location.search);
 			if (!id || parseInt(id) !== ddtData.collection[0].id) {
