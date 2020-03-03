@@ -15,6 +15,6 @@ const aliases = {
 	itemKey: "ItemKey"
 };
 
-const router = generateRouter(table, aliases);
+const router = generateRouter(table, aliases, "`DDT` IS NOT NULL AND `DDT` != 0");
 
 export default router;

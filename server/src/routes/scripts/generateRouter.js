@@ -3,11 +3,17 @@ import {query} from "dbUtils";
 import {prepareOptions} from "apiUtils";
 import {postJson} from "fetchUtils";
 
-const generateRouter = (table, aliases) => {
+const generateRouter = (table, aliases, where=null) => {
 	const router = express.Router();
 
 	router.get("/", (req, res, next) => {
-		const options = prepareOptions(req.query, aliases);
+		let options = prepareOptions(req.query, aliases);
+		if (options && options !== "" && where) {
+			options += " AND " + where;
+		} else if(where){
+			options = "WHERE " + where;
+		}
+		console.log(`SELECT \`ID\` AS id FROM \`${table}\` ${options}`);
 		query(`SELECT \`ID\` AS id FROM \`${table}\` ${options}`, [], async items => {
 			res.json({
 				"@self": {url: req.currentUrl, type: "collection"},
