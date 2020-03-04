@@ -175,8 +175,8 @@ class AddDDT extends Component {
 					inputRef={setRef("color")}
 				/>
 				<Date
-					value={value.dueDate.slice(0, 10)}
-					min={value.ddt.date.slice(0, 10)}
+					value={value.dueDate?.slice(0, 10)}
+					min={value.ddt.date?.slice(0, 10)}
 					onChange={event => this.setValue("dueDate")(event.target.value)}
 					className={c.date}
 					placeholder="Consegna"

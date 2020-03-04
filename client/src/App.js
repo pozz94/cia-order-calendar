@@ -14,6 +14,7 @@ import modalContext from "Contexts/modalContext";
 import Layout from "./Layouts/Layout";
 
 //routes
+import ChoseOperator from "./Routes/ChoseOperator"
 import AdminCalendar from "./Routes/AdminCalendar";
 import UserCalendar from "./Routes/UserCalendar";
 import AddDDT from "./Routes/AddDDT";
@@ -89,7 +90,8 @@ class App extends Component {
 				<Route exact path="/*">
 					<Layout>
 						<Switch>
-							<Route exact path="/" component={AdminCalendar} />
+							<Route exact path="/" component={ChoseOperator} />
+							<Route path="/admin-calendar" component={AdminCalendar} />
 							<Route path="/add-ddt" component={AddDDT} />
 							<Route path="/user-calendar" component={UserCalendar} />
 							<Route component={NotFound} />

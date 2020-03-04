@@ -22,45 +22,9 @@ class AddDDT extends Component {
 	};
 
 	fetchDDT = async (callback = () => {}) => {
-		console.log("fetching DDT");
-		const {id} = queryString.parse(this.props.location.search);
-		let query;
-		if (this.state.ddtData.id) {
-			query = `id=${this.state.ddtData.id}`;
-		} else if (this.state.ddtData.code && this.state.ddtData.customers.id) {
-			query = `code=${this.state.ddtData.code}, customers=${this.state.ddtData.customers.id}`;
-		} else if (id) {
-			query = `id=${id}`;
-		} else {
-			query = `id=0`;
-		}
+		const { id } = queryString.parse(this.props.location.search);
 
-		const ddtData = await postJson("/api/bundler", {
-			query: `
-				ddt(${query}){
-					id,
-					code,
-					date,
-					customers{id, name}
-				}
-			`
-		});
-		const isSameDDT = ddtData && ddtData.collection[0] &&
-			JSON.stringify(ddtData.collection[0].customers) ===
-				JSON.stringify(this.state.ddtData.customers) &&
-			ddtData.collection[0].code === this.state.ddtData.code;
-		const ddtNotEmpty = this.state.ddtData.customers && this.state.ddtData.code;
-
-		if (
-			!ddtData.error &&
-			ddtData.collection[0] &&
-			((isSameDDT && ddtData && ddtData.collection[0] && ddtData.collection[0].date === this.state.ddtData.date) || !ddtNotEmpty)
-		) {
-			const {id} = queryString.parse(this.props.location.search);
-			if (!id || parseInt(id) !== ddtData.collection[0].id) {
-				console.log("pushing history");
-				this.props.history.push(`/add-ddt?id=${ddtData.collection[0].id}`);
-			}
+		if (id) {
 			const list = await postJson("/api/bundler", {
 				query: `
 					items{
@@ -73,7 +37,7 @@ class AddDDT extends Component {
 						packaging,
 						colors{id, name},
 						models{id, name, code},
-						ddt(${query}){
+						ddt(id=${id}){
 							id,
 							code,
 							date,
@@ -83,6 +47,10 @@ class AddDDT extends Component {
 				`
 			});
 			if (!list.error && list.collection.length && list.collection[0].ddt) {
+				console.log("list not empty, updating ddt", id, list.collection[0].ddt);
+
+				const ddtData = list.collection[0].ddt;
+
 				let items = this.state.items
 					.map(item => {
 						const index = list.collection.findIndex(obj => obj.itemKey === item.itemKey);
@@ -91,40 +59,83 @@ class AddDDT extends Component {
 						if (index >= 0) list.collection.splice(index, 1);
 						return item;
 					})
-					.filter(item => item !== null);
+					.filter(item => item !== null)
+					.map(item => {
+						item.ddt = ddtData;
+						return item;
+					});
 
 				items = [...items, ...list.collection];
 
 				this.setState(
 					{
-						ddtData: ddtData.collection[0],
+						ddtData,
 						items
 					},
 					callback
 				);
 			} else {
-				this.setState(
-					{
-						ddtData: ddtData.collection[0],
-						items: this.state.items.map(item => {
-							item.ddt = ddtData.collection[0];
-							return item;
-						})
-					},
-					() => {
-						if (!this.state.items.length) {
-							this.addItem();
+				console.log("error or empty list");
+
+				const ddtData = await postJson("/api/bundler", {
+					query: `
+						ddt(id=${id}){
+							id,
+							code,
+							date,
+							customers{id, name}
 						}
-						callback();
-					}
-				);
+					`
+				});
+
+				if (!ddtData.error && ddtData.collection[0]) {
+					this.setState(
+						{
+							ddtData: ddtData.collection[0],
+							items: this.state.items.map(item => {
+								item.ddt = ddtData.collection[0];
+								return item;
+							})
+						},
+						() => {
+							if (!this.state.items.length) {
+								this.addItem();
+							}
+							callback();
+						}
+					);
+				} else {
+					this.props.history.push(`/404`);
+				}
 			}
-		} else if (ddtNotEmpty) {
-			postJson("/api/bundler", {query: {ddt: this.state.ddtData}}).then(() => {
-				this.fetchDDT(callback);
-			});
-		}
+		} else {
+			console.log("resetting")
+			this.setState(
+				{
+					ddtData: {
+						customers: null,
+						code: null,
+						date: new Date().toISOString().substr(0, 10)
+					},
+					items: []
+				},
+				() => {
+					if (!this.state.items.length) {
+						this.addItem();
+					}
+					callback();
+				}
+			);
+		}	
 	};
+
+	postDDT = () => {
+
+		console.log("posting altered DDT data:", { ddt: this.state.ddtData })
+		postJson("/api/bundler", { query: { ddt: this.state.ddtData } }).then((res) => {
+			this.props.history.push(`/add-ddt?id=${res.ddt}`);
+		});
+	}
 
 	addItem = () => {
 		const lastItem = (this.state.items.slice(-1)[0] && this.state.items.slice(-1)[0]) || {};
@@ -169,7 +180,6 @@ class AddDDT extends Component {
 
 	messageHandler = event => {
 		const data = JSON.parse(event.data);
-		console.log(data);
 		if (data === "items") this.fetchDDT();
 	};
 
@@ -185,13 +195,24 @@ class AddDDT extends Component {
 		}
 	};
 
+	componentDidUpdate = (prevProps) => {
+		const {id:oldId} = queryString.parse(prevProps.location.search);
+		const { id } = queryString.parse(this.props.location.search);
+
+		console.log((id || oldId) && oldId!==id)
+
+		if((id || oldId) && oldId!==id){
+			this.fetchDDT();
+		}
+	}
+
 	render = () => (
 		<form className={c.form} onSubmit={this.handleSubmit}>
 			<DDTFormField
 				ddtData={this.state.ddtData}
 				setDDT={this.setDDT}
 				addItem={this.addItem}
-				fetchDDT={this.fetchDDT}
+				postDDT={this.postDDT}
 			/>
 			{this.state.items.length ? (
 				<React.Fragment>

@@ -7,19 +7,20 @@
 	margin: auto;
 	width: fit-content;
 	width: -moz-fit-content;
-	height: 100%;
-	overflow: auto;
+	/*overflow: auto;*/
 }
 
 .wrapper table {
+	margin: 1rem;
 	text-align: left;
 	position: relative;
-	border-collapse: collapse;
+	border-collapse: separate;
+	border-spacing: 0 0.33rem;
 	border-radius: 0.5rem;
 }
 .wrapper th,
 .wrapper td {
-	padding: 0.5rem 1rem;
+	padding: 0.25rem 1rem;
 	min-width: 3rem;
 }
 .wrapper thead {
@@ -28,8 +29,19 @@
 	z-index: 2;
 }
 
-.wrapper tbody tr {
-	border-bottom: 0.25rem solid white;
+.wrapper td {
+    border: solid 0.5px rgba(0,0,0, 0.25);
+    border-style: solid none;
+}
+
+.wrapper td:first-child {
+    border-left-style: solid;
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.wrapper td:last-child {
+    border-right-style: solid;
+    border-radius: 0 0.5rem 0.5rem 0;
 }
 
 .wrapper th {

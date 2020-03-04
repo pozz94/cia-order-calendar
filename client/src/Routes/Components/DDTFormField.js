@@ -16,7 +16,7 @@ const DDTFormField = props => {
 
 	const setFocus = toFocus => () => {
 		if (customers && code && date) {
-			props.fetchDDT();
+			props.postDDT();
 		}
 		inputRefs[toFocus] && inputRefs[toFocus].focus();
 	};
@@ -28,7 +28,7 @@ const DDTFormField = props => {
 		setTimeout(() => {
 			if (!currentTarget.contains(document.activeElement)) {
 				if (customers && code && date) {
-					props.fetchDDT();
+					props.postDDT();
 				}
 			}
 		}, 0);
@@ -81,27 +81,20 @@ const DDTFormField = props => {
 			/>
 			<input
 				value={(date && date.slice(0, 10)) || ""}
-				onChange={e => props.setDDT({date: e.target.value})}
+				onChange={e => {
+					props.setDDT({ date: e.target.value })
+				}}
 				className={c.date}
 				type="date"
 				placeholder="Data Consegna"
 				ref={setInputRefs("date")}
 				onKeyPress={onEnter(event => {
-					console.log(new Date(event.target.value).getFullYear());
-					props.setDDT({
-						date: event.target.value,
-						year: new Date(event.target.value).getFullYear()
-					});
+					props.setDDT({date: event.target.value,});
 					setFocus("number")();
-					if (customers && code && date) props.fetchDDT();
 				})}
 				onKeyDown={event => {
 					if (event.keyCode === 9) {
-						console.log(new Date(event.target.value).getFullYear());
-						props.setDDT({
-							date: event.target.value,
-							year: new Date(event.target.value).getFullYear()
-						});
+						props.setDDT({date: event.target.value});
 					}
 				}}
 			/>

@@ -29,24 +29,26 @@ const adminList = props => {
 	return (
 		<div className={c.wrapper}>
 			<table>
-				<tbody>
-					{Object.keys(groupedItems).map((day, index) => (
-						<React.Fragment key={index}>
+				{Object.keys(groupedItems).map((day, index) => (
+					<React.Fragment key={index}>
+						<thead>
 							<tr className={c.groupLabel}>
 								<th colSpan="5">In consegna {formatDate(groupedItems[day][0].dueDate)}</th>
 							</tr>
 							<tr className={c.labelsWrapper}>
 								<th>qt</th>
-								<th colSpan="2">articolo</th>
+								<th>articolo</th>
 								<th>cliente</th>
 								<th>colore</th>
 							</tr>
+						</thead>
+						<tbody>
 							{groupedItems[day].map((data, index) => (
 								<Item key={index} data={data} />
 							))}
-						</React.Fragment>
-					))}
-				</tbody>
+						</tbody>
+					</React.Fragment>
+				))}
 			</table>
 		</div>
 	);

@@ -6,8 +6,7 @@ const aliases = {
 	id: "ID",
 	code: "Code",
 	customers: "Customer",
-	date: "Date",
-	year: "Year"
+	date: "Date"
 };
 
 const router = generateRouter(table, aliases);
