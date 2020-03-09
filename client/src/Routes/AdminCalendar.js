@@ -16,6 +16,7 @@ const AdminCalendar = () => {
 				dueDate,
 				altName,
 				highlightColor,
+				status,
 				colors{
 					id,
 					name

@@ -41,6 +41,9 @@ const item = props => {
 			<td>
 				<div className={c.highlightColor} style={{backgroundColor: highlightColor}} />
 			</td>
+			<td>
+				{props.data.status}
+			</td>
 		</tr>
 	);
 };
