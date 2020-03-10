@@ -22,7 +22,6 @@ app.use("/api", router);
 const buildPath = path.join(__dirname, "client");
 
 if (!process.env.NODE_ENV || (process.env.NODE_ENV && process.env.NODE_ENV !== "development")) {
-	console.log(buildPath);
 	app.use(express.static(buildPath));
 	app.get("*", (req, res) => res.sendFile("index.html", { root: buildPath }));
 }

@@ -13,7 +13,6 @@ const generateRouter = (table, aliases, where=null) => {
 		} else if(where){
 			options = "WHERE " + where;
 		}
-		console.log(`SELECT \`ID\` AS id FROM \`${table}\` ${options}`);
 		query(`SELECT \`ID\` AS id FROM \`${table}\` ${options}`, [], async items => {
 			res.json({
 				"@self": {url: req.currentUrl, type: "collection"},

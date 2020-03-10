@@ -47,10 +47,17 @@ const AdminCalendar = () => {
 	);
 
 	useEffect(() => {
-		fetchList();
-		let evtSrc = new EventSource("api/update");
+		console.log("setting event source")
+		const evtSrc = new EventSource("api/update");
 		evtSrc.onmessage = messageHandler;
+
+		fetchList();
+		
+		//cleanup
+		return () => { console.log("closing event source"); evtSrc.close() }
 	}, [fetchList, messageHandler]);
+
+
 
 	return <AdminList list={state.list} />;
 };

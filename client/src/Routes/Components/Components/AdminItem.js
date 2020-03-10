@@ -36,7 +36,6 @@ const item = props => {
 		: props.data.oldStatus;
 
 	const handleCompletion = e => {
-		console.log(status[status.length - 1]);
 		if (!done) {
 			queryBundler({
 				items: {

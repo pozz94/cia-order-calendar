@@ -8,8 +8,6 @@ const AdminCalendar = () => {
 		list: []
 	});
 
-	console.log(JSON.stringify(status.slice(0, -1)).slice(0,-1), ",]")
-
 	const fetchList = useCallback(() => {
 		postJson("/api/bundler", {
 			query: `
@@ -66,19 +64,16 @@ const AdminCalendar = () => {
 		[fetchList]
 	);
 
-	const evtSrc = useRef(null);
-	const listenEvt = useCallback(() => {
-		if (!evtSrc.current) {
-			evtSrc.current = new EventSource("api/update");
-			evtSrc.current.onmessage = messageHandler;
-		}
-	}, [messageHandler]);
-
 	useEffect(() => {
+		console.log("setting event source")
+		const evtSrc = new EventSource("api/update");
+		evtSrc.onmessage = messageHandler;
+
 		fetchList();
-		listenEvt();
-		return () => evtSrc.current.close();
-	}, [fetchList, listenEvt]);
+		
+		//cleanup
+		return () => { console.log("closing event source"); evtSrc.close() }
+	}, [fetchList, messageHandler]);
 
 	return <AdminList list={state.list} />;
 };

@@ -47,8 +47,6 @@ class AddDDT extends Component {
 				`
 			});
 			if (!list.error && list.collection.length && list.collection[0].ddt) {
-				console.log("list not empty, updating ddt", id, list.collection[0].ddt);
-
 				const ddtData = list.collection[0].ddt;
 
 				let items = this.state.items
@@ -75,8 +73,6 @@ class AddDDT extends Component {
 					callback
 				);
 			} else {
-				console.log("error or empty list");
-
 				const ddtData = await postJson("/api/bundler", {
 					query: `
 						ddt(id=${id}){
@@ -109,7 +105,6 @@ class AddDDT extends Component {
 				}
 			}
 		} else {
-			console.log("resetting")
 			this.setState(
 				{
 					ddtData: {
@@ -130,8 +125,6 @@ class AddDDT extends Component {
 	};
 
 	postDDT = () => {
-
-		console.log("posting altered DDT data:", { ddt: this.state.ddtData })
 		postJson("/api/bundler", { query: { ddt: this.state.ddtData } }).then((res) => {
 			this.props.history.push(`/add-ddt?id=${res.ddt}`);
 		});
@@ -199,11 +192,13 @@ class AddDDT extends Component {
 		const {id:oldId} = queryString.parse(prevProps.location.search);
 		const { id } = queryString.parse(this.props.location.search);
 
-		console.log((id || oldId) && oldId!==id)
-
 		if((id || oldId) && oldId!==id){
 			this.fetchDDT();
 		}
+	}
+
+	componentWillUnmount = () => {
+		this.source.close();
 	}
 
 	render = () => (
