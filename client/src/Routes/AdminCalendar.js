@@ -1,4 +1,4 @@
-import React, {useState, useRef, useCallback, useEffect} from "react";
+import React, {useState, useCallback, useEffect} from "react";
 import AdminList from "./Components/AdminList";
 import {postJson} from "Utils/fetchUtils";
 
@@ -46,19 +46,11 @@ const AdminCalendar = () => {
 		[fetchList]
 	);
 
-	const evtSrc = useRef(null);
-	const listenEvt = useCallback(() => {
-		if (!evtSrc.current) {
-			evtSrc.current = new EventSource("api/update");
-			evtSrc.current.onmessage = messageHandler;
-		}
-	}, [messageHandler]);
-
 	useEffect(() => {
 		fetchList();
-		listenEvt();
-		return () => evtSrc.current.close();
-	}, [fetchList, listenEvt]);
+		let evtSrc = new EventSource("api/update");
+		evtSrc.onmessage = messageHandler;
+	}, [fetchList, messageHandler]);
 
 	return <AdminList list={state.list} />;
 };

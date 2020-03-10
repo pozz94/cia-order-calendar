@@ -31,6 +31,10 @@ const item = props => {
 
 	const done = status.indexOf("completato") < status.indexOf(props.data.status);
 
+	const undoStatus = (status.length - 2 < status.indexOf(props.data.oldStatus))
+		? status[status.length - 2]
+		: props.data.oldStatus;
+
 	const handleCompletion = e => {
 		console.log(status[status.length - 1]);
 		if (!done) {
@@ -45,7 +49,8 @@ const item = props => {
 			queryBundler({
 				items: {
 					...props.data,
-					status: props.data.oldStatus
+					status: undoStatus,
+					oldStatus: undoStatus
 				}
 			})
 		}

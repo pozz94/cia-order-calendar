@@ -45,7 +45,6 @@ opts
 
 opt -> _ %name _ "=" _ (string|number|array|"undefined"|"null") {%
     data => {
-		console.log(data[5][0])
         return {
             [data[1].text]:(data[5][0]==="undefined")?0:data[5][0]
         };
