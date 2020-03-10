@@ -35,10 +35,8 @@ const navBar = props => (
 						</Route>
 						<Route exact path="*">
 							<Link to="/admin-calendar">Calendario Amministratore</Link>
-							<Link to="/user-calendar">Calendario Operatori</Link>
-							<Link to="/add-ddt">
-								<button>Nuovo ordine</button>
-							</Link>
+							<Link to="/">Home</Link>
+							<Link to="/add-ddt" className="button">Nuovo ordine</Link>
 							<button
 								onClick={() =>
 									context.displayModal({

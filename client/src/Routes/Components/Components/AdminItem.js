@@ -4,7 +4,7 @@ import c from "./AdminItem.module.css";
 import queryBundler from "Utils/queryBundler";
 import status from "../../../status.json";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUndoAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faUndoAlt, faTimes, faCheck, faCheckDouble } from '@fortawesome/free-solid-svg-icons'
 
 const item = props => {
 	const name = props.data.altName ? props.data.altName : props.data.models.name;
@@ -33,7 +33,7 @@ const item = props => {
 
 	const undoStatus = (status.length - 2 < status.indexOf(props.data.oldStatus))
 		? status[status.length - 2]
-		: props.data.oldStatus;
+		: props.data.oldStatus || status[status.length - 2];
 
 	const handleCompletion = e => {
 		if (!done) {
@@ -72,6 +72,12 @@ const item = props => {
 				<div className={c.highlightColor} style={{backgroundColor: highlightColor}} />
 			</td>
 			<td>
+				{props.data.status === "completato"
+					? <span><FontAwesomeIcon icon={faCheck} style={{color: "var(--main-light)"}}/> </span>
+					: null}
+				{props.data.status === "consegnato"
+					? <span><FontAwesomeIcon icon={faCheckDouble} style={{color: "var(--active)"}}/> </span>
+					: null}
 				{props.data.status}
 			</td>
 			<td className={c.buttonCell}>

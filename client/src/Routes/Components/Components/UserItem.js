@@ -24,7 +24,7 @@ const Item = props => {
 
 	const undoStatus = (currentOperator < status.indexOf(props.data.oldStatus))
 		? status[currentOperator]
-		: props.data.oldStatus;
+		: props.data.oldStatus || status[currentOperator];
 
 	const style = done
 		? { background: "var(--inactive-bg)", color: "gray" }

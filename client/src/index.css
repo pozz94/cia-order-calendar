@@ -1,6 +1,6 @@
 :root {
-	--main-light: rgba(129, 143, 132);
-	--main: rgba(81, 119, 124);
+	--main-light: rgb(131, 150, 135);
+	--main: rgb(80, 122, 128);
 	--main-dark: rgba(50, 53, 63);
 	--active-light: hsl(34, 85%, 60%);
 	--active-light-desaturated: hsl(34, 64%, 55%);
@@ -56,21 +56,21 @@ body {
 
 h1 {
 	font-size: 1.7rem;
-	margin: 0.5rem 0;
+	margin: 0.85rem 0;
 	font-weight: 500;
 	color: #111;
 }
 
 h2 {
 	font-size: 1.3rem;
-	margin: 0.5rem 0;
+	margin: 0.65rem 0;
 	font-weight: 600;
 	color: #222;
 }
 
 h3 {
 	font-size: 1.1rem;
-	margin: 0.5rem 0;
+	margin: 0.55rem 0;
 	font-weight: 700;
 	color: #333;
 }
@@ -84,14 +84,14 @@ h4 {
 
 h5 {
 	font-size: 0.95rem;
-	margin: 0.5rem 0;
+	margin: 0.475rem 0;
 	font-weight: 900;
 	color: #484848;
 }
 
 h6 {
 	font-size: 0.9rem;
-	margin: 0.5rem 0;
+	margin: 0.45rem 0;
 	font-weight: 900;
 	color: #444;
 }
@@ -108,6 +108,43 @@ p,
 div {
 	font-size: 1rem;
 	font-weight: 400;
+}
+
+p{
+	margin: 1rem 0;
+}
+
+a {
+	position: relative;
+	color: var(--main);
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+a::after{
+	display: block;
+	position: absolute;
+	bottom:-0.1rem;
+	right: 37.5%;
+	content: "";
+	height: 0.1rem;
+	width: 25%;
+	background: var(--main);
+	border-radius: 0.05rem;
+	opacity: 0%;
+	transition: background 0.2s, right 0.2s, width 0.2s, opacity 0.2s;
+}
+
+a:hover {
+	color: var(--active);
+	
+}
+
+a:hover::after{
+	right: 0;
+	width: 100%;
+	background: var(--active);
+	opacity: 75%;
 }
 
 body .scrollTrack {
@@ -218,7 +255,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	height: 100%;
 	margin: 0;
 }
-button {
+button, a.button {
+    vertical-align: middle;
+	display: inline-block;
 	position: relative;
 	font-family: "montserrat", sans-serif;
 	background: var(--active-gradient);
@@ -228,13 +267,14 @@ button {
 	border: none;
 	margin: 0.5rem;
 	padding: 0.5rem 2rem;
-	line-height: 1rem;
+	line-height: 1.5rem;
+	font-size: 1rem;
 	opacity: 1;
 	z-index: 0;
 	font-weight: 500;
 }
 
-button::before {
+button::before, a.button::before {
 	position: absolute;
 	content: "";
 	top: 0;
@@ -247,15 +287,26 @@ button::before {
 	z-index: -2;
 }
 
-button:hover::before {
+button:hover::before, a.button:hover::before{
 	opacity: 0;
 }
 
-button:focus {
+button:focus, a.button:focus {
 	outline: 0;
 	border: 1px solid var(--active-light);
 	box-shadow: var(--shadow);
 	padding: calc(0.5rem - 1px) calc(2rem - 1px);
+}
+
+a.button::after{
+	display: none;
+	content: none;
+}
+
+label{
+	display:block;
+	margin: 0;
+	margin-top: 1rem;
 }
 
 .modal-enter,
