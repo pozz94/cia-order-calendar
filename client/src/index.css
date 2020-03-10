@@ -16,6 +16,13 @@
 		var(--active),
 		var(--active-light)
 	);
+	--inactive-bg: repeating-linear-gradient(
+		135deg,
+		lightgrey,
+		lightgrey 1.4142px,
+		rgb(180, 180, 180) 1.4142px,
+		rgb(180, 180, 180) 2.8284px
+	);
 }
 
 #root {

@@ -1,10 +1,12 @@
 import React from "react";
 import optimalTextColor from "Utils/optimalTextColor";
 import c from "./UserItem.module.css";
-import { postJson } from "Utils/fetchUtils";
+import queryBundler from "Utils/queryBundler";
 import queryString from "query-string";
 import status from "../../../status.json";
-import {useLocation} from "react-router-dom"
+import { useLocation } from "react-router-dom"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUndoAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const Item = props => {
 	const name = props.data.altName ? props.data.altName : props.data.models.name;
@@ -20,9 +22,33 @@ const Item = props => {
 
 	const done = currentOperator < status.indexOf(props.data.status);
 
+	const undoStatus = (currentOperator < status.indexOf(props.data.oldStatus))
+		? status[currentOperator]
+		: props.data.oldStatus;
+
 	const style = done
-		? { backgroundColor: "lightgray", color: "gray" }
+		? { background: "var(--inactive-bg)", color: "gray" }
 		: { backgroundColor: highlightColor, color: optimalTextColor(highlightColor) };
+	
+	const handleCompletion = e => {
+		if (!done) {
+			queryBundler({
+				items: {
+					...props.data,
+					status: status[currentOperator + 1],
+					oldStatus: props.data.status,
+				}
+			})
+		} else {
+			queryBundler({
+				items: {
+					...props.data,
+					status: undoStatus,
+					oldStatus: undoStatus
+				}
+			})
+		}
+	}
 
 	return (
 		<tr className={[c.userItem, ...done?[c.userItemDone]:[]].join(" ")} style={style}>
@@ -33,31 +59,18 @@ const Item = props => {
 			</td>
 			<td>{props.data.ddt.customers.name}</td>
 			<td>{props.data.colors.name}</td>
-			<td className={c.buttonCell}>
-				<button
-					onClick={e => {
-						if (!done) {
-							postJson("/api/bundler", {
-								query: {
-									items: {
-										...props.data,
-										status: status[currentOperator + 1]
-									}
-								}
-							})
-						} else {
-							postJson("/api/bundler", {
-								query: {
-									items: {
-										...props.data,
-										status: status[currentOperator]
-									}
-								}
-							})
-						}
-					}}
-				>{!done?"✖":"⟲"}</button>
-			</td>
+			{
+				currentOperator || currentOperator===0
+					? <td className={c.buttonCell}>
+						<button onClick={handleCompletion}>
+							{!done
+								? <FontAwesomeIcon icon={faTimes} />
+								: <FontAwesomeIcon icon={faUndoAlt} style={{color: "dimgrey"}}/>
+							}
+						</button>
+					</td>
+					: null
+			}
 		</tr>
 	);
 };

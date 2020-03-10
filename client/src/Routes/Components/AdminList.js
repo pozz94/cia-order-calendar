@@ -16,6 +16,8 @@ const adminList = props => (
 					<th>ddt</th>
 					<th>colore</th>
 					<th>consegna</th>
+					<th></th>
+					<th>stato</th>
 				</tr>
 			</thead>
 			<tbody>

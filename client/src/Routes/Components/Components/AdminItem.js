@@ -1,6 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import c from "./AdminItem.module.css";
+import queryBundler from "Utils/queryBundler";
+import status from "../../../status.json";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUndoAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const item = props => {
 	const name = props.data.altName ? props.data.altName : props.data.models.name;
@@ -25,6 +29,28 @@ const item = props => {
 			.substr(-2);
 	}
 
+	const done = status.indexOf("completato") < status.indexOf(props.data.status);
+
+	const handleCompletion = e => {
+		console.log(status[status.length - 1]);
+		if (!done) {
+			queryBundler({
+				items: {
+					...props.data,
+					status: status[status.length - 1],
+					oldStatus: props.data.status,
+				}
+			})
+		} else {
+			queryBundler({
+				items: {
+					...props.data,
+					status: props.data.oldStatus
+				}
+			})
+		}
+	}
+
 	return (
 		<tr>
 			<td>{props.data.ammount}</td>
@@ -43,6 +69,14 @@ const item = props => {
 			</td>
 			<td>
 				{props.data.status}
+			</td>
+			<td className={c.buttonCell}>
+				<button onClick={handleCompletion}>
+					{!done
+						? <FontAwesomeIcon icon={faTimes} />
+						: <FontAwesomeIcon icon={faUndoAlt} />
+					}
+				</button>
 			</td>
 		</tr>
 	);

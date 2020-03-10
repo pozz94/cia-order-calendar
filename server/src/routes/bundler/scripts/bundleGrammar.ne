@@ -10,6 +10,8 @@ const lexer = moo.compile({
     rb: ')',
     lcb: '{',
     rcb: '}',
+	lsb: '[',
+    rsb: ']',
     equal: '=',
     dqstr: /"(?:\\["\\]|[^\n"\\])*"/,
     sqstr: /`(?:\\[`\\]|[^\n`\\])*`/,
@@ -41,13 +43,17 @@ opts
     -> opt "," opts {%data => {return {...data[0], ...data[2]}}%}
     |  opt {% id %}
 
-opt -> _ %name _ "=" _ (string|number|"undefined"|"null") {%
+opt -> _ %name _ "=" _ (string|number|array|"undefined"|"null") {%
     data => {
+		console.log(data[5][0])
         return {
             [data[1].text]:(data[5][0]==="undefined")?0:data[5][0]
         };
     }
 %}
+
+array -> "[" _ ((string|number) _ "," _):* (string|number):? _ "]" 
+{%data => [...data[2].map(element=>element[0][0]), ...data[3]||[]]%}
 
 string->(%dqstr|%sqstr|%btstr){%
     data => {

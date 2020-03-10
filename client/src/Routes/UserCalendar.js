@@ -1,22 +1,26 @@
 import React, {useState, useRef, useCallback, useEffect} from "react";
 import AdminList from "./Components/UserList";
-import {postJson} from "Utils/fetchUtils";
+import { postJson } from "Utils/fetchUtils";
+import status from "../status.json";
 
 const AdminCalendar = () => {
 	const [state, setState] = useState({
 		list: []
 	});
 
+	console.log(JSON.stringify(status.slice(0, -1)).slice(0,-1), ",]")
+
 	const fetchList = useCallback(() => {
 		postJson("/api/bundler", {
 			query: `
-			items{
+			items(status=${JSON.stringify(status.slice(0, -1))}){
 				id,
 				ammount,
 				dueDate,
 				altName,
 				highlightColor,
 				status,
+				oldStatus,
 				colors{
 					id,
 					name

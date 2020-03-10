@@ -13,7 +13,8 @@ const aliases = {
 	packaging: "Packaging",
 	highlightColor: "HighlightColor",
 	itemKey: "ItemKey",
-	status: "Status"
+	status: "Status",
+	oldStatus: "OldStatus",
 };
 
 const router = generateRouter(table, aliases, "`DDT` IS NOT NULL AND `DDT` != 0");

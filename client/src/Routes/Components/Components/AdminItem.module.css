@@ -5,3 +5,28 @@
 	border-radius: 0.375rem;
 	border: 1px solid lightgray;
 }
+
+.buttonCell {
+	width: 0;
+	text-align: center;
+	padding: 0 !important;
+	margin: 0;
+}
+.buttonCell button{
+	background: none;
+	color: inherit;
+	font-size: 1rem;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0rem;
+	margin: 0.25rem;
+}
+.buttonCell button
+.buttonCell button:active,
+.buttonCell button:focus{
+	border: none;
+	box-shadow: none;
+}
+.buttonCell button::before{
+	background: none;
+}

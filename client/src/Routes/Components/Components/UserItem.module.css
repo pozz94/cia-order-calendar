@@ -6,21 +6,6 @@
 	vertical-align: top;
 }
 
-.userItem td:last-child{
-	position: relative;
-}
-
-.userItemDone td:last-child:after{
-	display:block;
-	content:"";
-	position: absolute;
-	height: calc(50% - 1px);
-	width: 85vw;
-	top: 0;
-	left: -85vw;
-	border-bottom: 2px solid grey;
-}
-
 .articleCode {
 	font-size: 0.5em;
 }
