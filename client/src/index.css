@@ -42,6 +42,21 @@ main {
 	box-sizing: border-box;
 }
 
+@media (pointer:none), (pointer:coarse) {
+	*:not(input){
+		user-select: none; 
+	}
+}
+
+.alwaysSelectable{
+	user-select: auto; 
+}
+
+*::selection {
+  background: var(--main);
+  color: white;
+}
+
 html {
 	background-color: transparent;
 	font-size: 1vw;
@@ -104,14 +119,25 @@ th {
 	font-weight: 500;
 }
 
-p,
-div {
+p, div {
 	font-size: 1rem;
 	font-weight: 400;
 }
 
+div{
+	margin: 0.5rem;
+}
+
+div.inline{
+	display: inline-block;
+}
+
 p{
-	margin: 1rem 0;
+	margin: 0.5rem 0;
+}
+
+#root{
+	margin:0;
 }
 
 a {
@@ -131,20 +157,23 @@ a::after{
 	width: 25%;
 	background: var(--main);
 	border-radius: 0.05rem;
-	opacity: 0%;
+	opacity: 0.001;
 	transition: background 0.2s, right 0.2s, width 0.2s, opacity 0.2s;
 }
 
-a:hover {
-	color: var(--active);
-	
-}
+@media(hover: hover) and (pointer: fine) {
+	a:hover {
+		color: var(--active);
+		
+	}
 
-a:hover::after{
-	right: 0;
-	width: 100%;
-	background: var(--active);
-	opacity: 75%;
+
+	a:hover::after{
+		right: 0;
+		width: 100%;
+		background: var(--active);
+		opacity: 0.75;
+	}
 }
 
 body .scrollTrack {
@@ -223,14 +252,16 @@ input[type="checkbox"]:focus {
 	box-shadow: var(--shadow);
 	border: 1px solid lightgrey;
 }
-input:hover {
-	box-shadow: var(--shadow);
-}
-input[type="checkbox"]:hover {
-	box-shadow: var(--shadow);
-}
-input[type="checkbox"]:checked:hover {
-	border: 1px solid var(--active-light);
+@media(hover: hover) and (pointer: fine) {
+	input:hover {
+		box-shadow: var(--shadow);
+	}
+	input[type="checkbox"]:hover {
+		box-shadow: var(--shadow);
+	}
+	input[type="checkbox"]:checked:hover {
+		border: 1px solid var(--active-light);
+	}
 }
 input[type="number"] {
 	-moz-appearance: textfield;
@@ -254,6 +285,9 @@ input[type="date"]::-webkit-inner-spin-button {
 input[type="date"]::-webkit-calendar-picker-indicator {
 	height: 100%;
 	margin: 0;
+}
+input[type="text"], input[type="number"], input[type="date"] {
+	width: 14rem;
 }
 button, a.button {
     vertical-align: middle;
@@ -287,8 +321,13 @@ button::before, a.button::before {
 	z-index: -2;
 }
 
-button:hover::before, a.button:hover::before{
+button.active::before{
 	opacity: 0;
+}
+@media(hover: hover) and (pointer: fine) {
+	button:hover::before, a.button:hover::before{
+		opacity: 0;
+	}
 }
 
 button:focus, a.button:focus {
@@ -301,6 +340,29 @@ button:focus, a.button:focus {
 a.button::after{
 	display: none;
 	content: none;
+}
+
+button.outline, a.button.outline{
+	background: none;
+	border: 1px solid var(--main);
+	color: var(--main);
+	transition: background 0.15s, color 0.15s;
+}
+
+button.outline::before, a.button.outline::before{
+	display: none;
+	content: none;
+}
+
+button.outline.active{
+	background: var(--main);
+	color: white;
+}
+@media(hover: hover) and (pointer: fine) {
+	button.outline:hover, a.button.outline:hover{
+		background: var(--main);
+		color: white;
+	}
 }
 
 label{
