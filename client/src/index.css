@@ -124,16 +124,12 @@ p, div {
 	font-weight: 400;
 }
 
-div{
-	margin: 0.5rem;
-}
-
 div.inline{
 	display: inline-block;
 }
 
 p{
-	margin: 0.5rem 0;
+	margin: 1rem 0;
 }
 
 #root{
