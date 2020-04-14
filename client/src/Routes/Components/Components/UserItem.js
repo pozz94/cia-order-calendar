@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import optimalTextColor from "Utils/optimalTextColor";
 import c from "./UserItem.module.css";
 import queryBundler from "Utils/queryBundler";
@@ -7,9 +7,11 @@ import status from "../../../status.json";
 import { useLocation } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUndoAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { Spinner } from "UI/Spinner"
 
 const Item = props => {
 	const name = props.data.altName ? props.data.altName : props.data.models.name;
+
 
 	const highlightColor =
 		"#" +
@@ -21,6 +23,8 @@ const Item = props => {
 	const currentOperator = parseInt(queryString.parse(location.search).status);
 
 	const done = currentOperator < status.indexOf(props.data.status);
+	const [waiting, setWaiting] = useState(false);
+	useEffect(() => setWaiting(false), [done]);
 
 	const undoStatus = (currentOperator < status.indexOf(props.data.oldStatus))
 		? status[currentOperator]
@@ -31,6 +35,7 @@ const Item = props => {
 		: { backgroundColor: highlightColor, color: optimalTextColor(highlightColor) };
 	
 	const handleCompletion = e => {
+		setWaiting(true);
 		if (!done) {
 			queryBundler({
 				items: {
@@ -38,7 +43,7 @@ const Item = props => {
 					status: status[currentOperator + 1],
 					oldStatus: props.data.status,
 				}
-			})
+			});
 		} else {
 			queryBundler({
 				items: {
@@ -46,7 +51,7 @@ const Item = props => {
 					status: undoStatus,
 					oldStatus: undoStatus
 				}
-			})
+			});
 		}
 	}
 
@@ -63,9 +68,12 @@ const Item = props => {
 				currentOperator || currentOperator===0
 					? <td className={c.buttonCell}>
 						<button onClick={handleCompletion}>
-							{!done
-								? <FontAwesomeIcon icon={faTimes} />
-								: <FontAwesomeIcon icon={faUndoAlt} style={{color: "dimgrey"}}/>
+							{
+								!waiting ?
+									!done
+										? <FontAwesomeIcon icon={faTimes} />
+										: <FontAwesomeIcon icon={faUndoAlt} style={{color: "dimgrey"}}/>
+									: <Spinner style={{ fontSize: "1.75rem"}}/>
 							}
 						</button>
 					</td>

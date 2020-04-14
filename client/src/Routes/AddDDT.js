@@ -237,7 +237,7 @@ class AddDDT extends Component {
 			>
 				Aggiungi oggetto
 			</button>
-			<input type="submit" value="Conferma" />
+			<button className="outline">Conferma</button>
 		</form>
 	);
 }

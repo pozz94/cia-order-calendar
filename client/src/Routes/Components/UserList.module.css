@@ -3,15 +3,19 @@
 }
 
 .wrapper {
+	padding: 0 1.5rem;
 	position: relative;
 	margin: auto;
-	width: fit-content;
+	height: 100%;
 	width: -moz-fit-content;
-	/*overflow: auto;*/
+	clip-path: inset(0.1rem 0 0 0);
+	
+	overflow-y: scroll;
 }
 
 .wrapper table {
-	margin: 1rem;
+	width: fit-content;
+	margin: 0 auto;
 	text-align: left;
 	position: relative;
 	border-collapse: separate;
@@ -56,7 +60,7 @@
 }
 
 .wrapper .labelsWrapper th {
-	top: 2.75rem;
+	top: 3.5rem;
 	font-size: 0.66rem;
 	line-height: 0.66rem;
 	background: #fff;
@@ -71,7 +75,7 @@
 .wrapper .groupLabel th {
 	color: black;
 	background: #fff;
-	padding: 1.25rem 1rem 0.75rem 1rem;
+	padding: 2rem 1rem 0.25rem 1rem;
 	height: 3.5rem;
 	border: none;
 }

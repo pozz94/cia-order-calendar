@@ -2,6 +2,7 @@
 	--main-light: rgb(131, 150, 135);
 	--main: rgb(80, 122, 128);
 	--main-dark: rgba(50, 53, 63);
+	--main-very-light: rgb(175, 196, 199);
 	--active-light: hsl(34, 85%, 60%);
 	--active-light-desaturated: hsl(34, 64%, 55%);
 	--active: hsl(5, 54%, 52%);
@@ -32,7 +33,7 @@
 }
 
 main {
-	padding: 2rem 0;
+	padding: 0;
 	flex: 1;
 	overflow: auto;
 	overflow: overlay;
@@ -282,9 +283,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	height: 100%;
 	margin: 0;
 }
-input[type="text"], input[type="number"], input[type="date"] {
-	width: 14rem;
-}
 button, a.button {
     vertical-align: middle;
 	display: inline-block;
@@ -340,7 +338,7 @@ a.button::after{
 
 button.outline, a.button.outline{
 	background: none;
-	border: 1px solid var(--main);
+	border: 0.5px solid var(--main);
 	color: var(--main);
 	transition: background 0.15s, color 0.15s;
 }

@@ -2,6 +2,7 @@ import React from "react";
 import Item from "./Components/UserItem";
 import c from "./UserList.module.css";
 import _ from "lodash";
+import useVisibleRatio from "hooks/useVisibleRatio"
 
 const formatDate = date => {
 	date = new Date(date);
@@ -29,26 +30,35 @@ const adminList = props => {
 	return (
 		<div className={c.wrapper}>
 			<table>
-				{Object.keys(groupedItems).map((day, index) => (
-					<React.Fragment key={index}>
-						<thead>
-							<tr className={c.groupLabel}>
-								<th colSpan="5">In consegna {formatDate(groupedItems[day][0].dueDate)}</th>
-							</tr>
-							<tr className={c.labelsWrapper}>
-								<th>qt</th>
-								<th>articolo</th>
-								<th>cliente</th>
-								<th>colore</th>
-							</tr>
-						</thead>
-						<tbody>
-							{groupedItems[day].map((data, index) => (
-								<Item key={index} data={data} />
-							))}
-						</tbody>
-					</React.Fragment>
-				))}
+				{Object.keys(groupedItems).map((day, index) => {
+					const [ratio, ref] = useVisibleRatio();
+					return (
+						<React.Fragment key={index}>
+							<thead ref={ref}>
+								<tr className={c.groupLabel}>
+									<th colSpan="5">
+										In consegna {
+											formatDate(groupedItems[day][0].dueDate)
+										} {
+											//ratio
+										}
+									</th>
+								</tr>
+								<tr className={c.labelsWrapper}>
+									<th>qt</th>
+									<th>articolo</th>
+									<th>cliente</th>
+									<th colSpan="2">colore</th>
+								</tr>
+							</thead>
+							<tbody>
+								{groupedItems[day].map((data, index) => (
+									<Item key={index} data={data} />
+								))}
+							</tbody>
+						</React.Fragment>
+					)}
+				)}
 			</table>
 		</div>
 	);

@@ -2,6 +2,11 @@
 	--table-head-height: 2.5rem;
 }
 
+.main{
+	padding: 2rem;
+	height: 100%;
+}
+
 .wrapper {
 	position: relative;
 	margin: auto;
@@ -50,7 +55,7 @@
 	border-top: 1px solid lightgray;
 }
 
-.wrapper tbody tr:nth-child(odd) {
+.wrapper tbody tr:nth-child(even) {
 	background: #eee;
 }
 
@@ -61,6 +66,32 @@
 	color: var(--light-text);
 	position: sticky;
 	top: 0;
-	z-index: 2;
+	z-index: 1;
 	white-space: nowrap;
+}
+
+.wrapper .labelsWrapper th {
+	top: 3.5rem;
+	font-size: 0.66rem;
+	line-height: 0.66rem;
+	background: #fff;
+	color: #000;
+	padding: 0.2rem 1rem;
+	height: auto;
+	border: none;
+}
+.wrapper .labelsWrapper {
+	border: none;
+}
+.wrapper .groupLabel th {
+	top: 2.45rem;
+	color: white;
+	background: var(--main-very-light);
+	padding: 0 1rem;
+	height: 3.5rem;
+	border-top: 1px solid lightgray;
+	font-weight: 600;
+}
+.wrapper .groupLabel {
+	border: none;
 }

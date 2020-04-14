@@ -3,6 +3,7 @@
 	align-items: center;
 	justify-content: space-between;
 	box-shadow: var(--shadow);
+	z-index: 1;
 }
 
 .logo {

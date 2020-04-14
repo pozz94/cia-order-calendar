@@ -54,7 +54,6 @@ class AddDDT extends Component {
 	ifComplete = (callback, elseCallback = () => {}) => {
 		if (
 			this.props.value.ammount &&
-			this.props.value.models.code &&
 			this.props.value.models.name &&
 			this.props.value.colors.name &&
 			this.props.value.dueDate
