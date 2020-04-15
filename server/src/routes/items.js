@@ -15,6 +15,7 @@ const aliases = {
 	itemKey: "ItemKey",
 	status: "Status",
 	oldStatus: "OldStatus",
+	completionDate: "CompletionDate",
 };
 
 const router = generateRouter(table, aliases, "`DDT` IS NOT NULL AND `DDT` != 0");

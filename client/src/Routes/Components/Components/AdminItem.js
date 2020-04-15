@@ -25,12 +25,14 @@ const Item = props => {
 
 	const handleCompletion = e => {
 		setWaiting(true);
+		const date = new Date();
 		if (!done) {
 			queryBundler({
 				items: {
 					...props.data,
 					status: status[status.length - 1],
 					oldStatus: props.data.status,
+					completionDate: date.toISOString().slice(0, 10)
 				}
 			})
 		} else {
@@ -38,7 +40,8 @@ const Item = props => {
 				items: {
 					...props.data,
 					status: undoStatus,
-					oldStatus: undoStatus
+					oldStatus: undoStatus,
+					completionDate: null
 				}
 			})
 		}
