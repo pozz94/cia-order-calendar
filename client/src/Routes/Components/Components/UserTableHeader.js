@@ -40,9 +40,9 @@ const UserTableHeader = props => {
 	
 	useEffect(() => {
 		const opacityBy4 = (1 - Math.pow(ratio, 2)) * nextRatioLT1;
-		setOpacity(Math.round(opacityBy4 / 0.04) / 100);
+		setOpacity(Math.round(opacityBy4 / 0.03) / 100);
 	}, [ratio, index, nextRatioLT1])
-	
+
 	useEffect(() => {
 		ratios.current = [...occlusionRatios];
 	}, [occlusionRatios])

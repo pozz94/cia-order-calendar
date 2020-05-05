@@ -36,7 +36,8 @@ const navBar = props => (
 						<Route exact path="*">
 							<Link to="/admin-calendar">Calendario Amministratore</Link>
 							<Link to="/">Home</Link>
-							<Link to="/add-ddt" className="button">Nuovo ordine</Link>
+							<Switch><Route exact path="/admin-calendar"><Link to="/add-ddt" className="button">Nuovo ordine</Link></Route></Switch>
+							
 							<button
 								onClick={() =>
 									context.displayModal({
