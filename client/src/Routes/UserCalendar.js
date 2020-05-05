@@ -1,5 +1,5 @@
 import React, {useState, useCallback, useEffect} from "react";
-import AdminList from "./Components/UserList";
+import UserList from "./Components/UserList";
 import { postJson } from "Utils/fetchUtils";
 import status from "../status.json";
 
@@ -48,9 +48,6 @@ const AdminCalendar = () => {
 						}
 						return a.dueDate < b.dueDate ? -1 : 1;
 					})
-					.filter(item => {
-						return item.dueDate >= new Date().toISOString().slice(0, 10);
-					})
 			});
 		});
 		console.log("fetching");
@@ -75,7 +72,7 @@ const AdminCalendar = () => {
 		return () => { console.log("closing event source"); evtSrc.close() }
 	}, [fetchList, messageHandler]);
 
-	return <AdminList list={state.list} />;
+	return <UserList list={state.list} />;
 };
 
 export default AdminCalendar;
