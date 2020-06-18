@@ -52,7 +52,7 @@ const Item = props => {
 			<td>{props.data.ammount}</td>
 			<td>{props.data.models.code}</td>
 			<td>{name}</td>
-			<td>{props.data.ddt.customers.name}</td>
+			<td>{props?.data?.ddt?.customers?.name||"error"}</td>
 			<td>
 				<Link to={"/add-ddt?id=" + props.data.ddt.id}>{props.data.ddt.code}</Link>
 			</td>

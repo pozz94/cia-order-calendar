@@ -5,10 +5,10 @@ import {postJson} from "fetchUtils";
 const router = express.Router();
 
 const date = new Date();
-date.setDate(date.getDate() - 7);
+date.setDate(date.getDate() - 1);
 
 const completionDate = date.toISOString().slice(0, 10);
-console.log(completionDate)
+console.log(completionDate);
 
 router.get("/", (req, res, next) => {
 	query(
