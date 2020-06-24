@@ -5,7 +5,7 @@ import {postJson} from "fetchUtils";
 const router = express.Router();
 
 const date = new Date();
-date.setDate(date.getDate() - 1);
+date.setDate(date.getDate() - 2);
 
 const completionDate = date.toISOString().slice(0, 10);
 console.log(completionDate);
