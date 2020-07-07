@@ -173,7 +173,7 @@ class AddDDT extends Component {
 
 	messageHandler = event => {
 		const data = JSON.parse(event.data);
-		if (data === "items") this.fetchDDT();
+		if (data.type === "items") this.fetchDDT();
 	};
 
 	setDDT = ddtData => {

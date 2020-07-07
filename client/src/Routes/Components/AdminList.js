@@ -41,7 +41,7 @@ const AdminList = props => {
 	}, [dayIsHidden]);
 
 	useEffect(() => {
-		Object.keys(groupedItems).map((day) => {
+		Object.keys(groupedItems).forEach((day) => {
 			const done = groupedItems[day].filter((data) => data.status !== "consegnato").length === 0;
 			if (done && dayIsHidden[day]===undefined) {
 				setHidden(day);
@@ -73,14 +73,16 @@ const AdminList = props => {
 								<thead>
 									<tr className={c.groupLabel}>
 										<th colSpan="8">In consegna {formatDate(groupedItems[day][0].dueDate)}</th>
-										<th>
+										<th className={c.buttonCell}>
+											<button onClick={cycleHide(day)}>
 											{
 												done
 													? dayIsHidden[day]
-														? <FontAwesomeIcon icon={faChevronDown} onClick={cycleHide(day)} />
-														: <FontAwesomeIcon icon={faChevronUp} onClick={cycleHide(day)} />
+														? <FontAwesomeIcon icon={faChevronDown}/>
+														: <FontAwesomeIcon icon={faChevronUp}/>
 													: null
 											}
+											</button>
 										</th>
 									</tr>
 								</thead>

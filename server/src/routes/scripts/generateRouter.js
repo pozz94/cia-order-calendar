@@ -48,8 +48,8 @@ const generateRouter = (table, aliases, where=null) => {
 			`.replace(/\s+/g, " "),
 			[...values, ...values],
 			items => {
-				postJson(req.rootUrl + "/update", {type: table});
 				const id = items[items.length - 1][0].id;
+				postJson(req.rootUrl + "/update", {type: table, id, action: "add"});
 				res.json({url: [req.currentUrl, id].join("/"), id});
 			}
 		);
@@ -89,7 +89,7 @@ const generateRouter = (table, aliases, where=null) => {
 
 		query(`UPDATE \`${table}\` SET ${updates} WHERE \`ID\`= ?`, [...values, id], () => {
 			postJson(req.rootUrl + "/update", {
-				type: table
+				type: table, id, action: "edit"
 			});
 			res.json({url: req.currentUrl, id});
 		});
@@ -100,7 +100,7 @@ const generateRouter = (table, aliases, where=null) => {
 
 		query(`DELETE FROM \`${table}\` WHERE \`${aliases["id"]}\` = ?`, [id], ans => {
 			postJson(req.rootUrl + "/update", {
-				type: table
+				type: table, id, action: "delete"
 			});
 			if (ans.affectedRows !== 0) res.json({success: "Yeah!!!"});
 			else res.status(404).json({error: "not found"});

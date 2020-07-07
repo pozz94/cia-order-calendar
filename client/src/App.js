@@ -17,7 +17,7 @@ import Layout from "./Layouts/Layout";
 import ChoseOperator from "./Routes/ChoseOperator"
 import AdminCalendar from "./Routes/AdminCalendar";
 import UserCalendar from "./Routes/UserCalendar";
-import AddDDT from "./Routes/AddDDT";
+import AddDDT from "./Routes/AddDDTFunctional";
 import NotFound from "./Routes/404";
 
 class App extends Component {

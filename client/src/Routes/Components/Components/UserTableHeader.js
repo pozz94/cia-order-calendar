@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from "react"
 import useVisibleRatio from "hooks/useVisibleRatio"
 import c from "./UserTableHeader.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 const formatDate = date => {
 	date = new Date(date);
@@ -55,18 +57,35 @@ const UserTableHeader = props => {
 	return (
 		<thead ref={ref} className={c.header}>
 			<tr className={c.groupLabel}>
-				<th colSpan="5">
-					In consegna {
+				<th colSpan="4">
+					{props.done
+						? "Completati per"
+						: "In consegna"} {
 						formatDate(props.date)
 					}
 				</th>
+				<th className={c.buttonCell}>
+					<button onClick={props.cycleHide}>
+					{
+						props.done
+							? props.isHidden
+								? <FontAwesomeIcon icon={faChevronDown}/>
+								: <FontAwesomeIcon icon={faChevronUp}/>
+							: null
+					}
+					</button>
+				</th>
 			</tr>
-			<tr className={c.labelsWrapper}>
-				<th>qt</th>
-				<th>articolo</th>
-				<th>cliente</th>
-				<th colSpan="2">colore</th>
-			</tr>
+			{
+				props.isHidden
+					? null
+					: <tr className={c.labelsWrapper}>
+						<th>qt</th>
+						<th>articolo</th>
+						<th>cliente</th>
+						<th colSpan="2">colore</th>
+					</tr>
+			}
 			<tr className={c.shadow}>
 				<th colSpan="5" >
 					<div style={{

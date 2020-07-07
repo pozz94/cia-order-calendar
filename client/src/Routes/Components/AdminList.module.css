@@ -95,3 +95,28 @@
 .wrapper .groupLabel {
 	border: none;
 }
+
+.wrapper .buttonCell {
+	width: 0;
+	text-align: center;
+	padding: 0 !important;
+	margin: 0;
+}
+.wrapper .buttonCell button{
+	background: none;
+	color: inherit;
+	font-size: 1rem;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	margin: 0;
+}
+.wrapper .buttonCell button
+.wrapper .buttonCell button:active,
+.wrapper .buttonCell button:focus{
+	border: none;
+	box-shadow: none;
+}
+.wrapper .buttonCell button::before{
+	background: none;
+}

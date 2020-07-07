@@ -14,7 +14,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/", (req, res, next) => {
-	res.app.emit("update", req.body.type);
+	res.app.emit("update", {type: req.body.type, id: req.body.id, action: req.body.action});
 	res.json({success: true});
 	//res.end();
 });
