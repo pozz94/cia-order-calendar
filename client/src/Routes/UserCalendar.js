@@ -14,6 +14,7 @@ const fetchItems = (id = null) => queryApi(`
 				highlightColor,
 				status,
 				oldStatus,
+				itemKey,
 				colors{
 					id,
 					name

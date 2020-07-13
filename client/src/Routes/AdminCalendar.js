@@ -47,7 +47,6 @@ const AdminCalendar = () => {
 		event => {
 			const data = JSON.parse(event.data);
 			if (data.type === "items") {
-				//console.log(data, list);
 				if (data.action === "add") {
 					fetchItems(data.id).then(items =>
 						setList(l=>[...listRef.current, items[0]])
@@ -59,7 +58,6 @@ const AdminCalendar = () => {
 				} else if (data.action === "delete") {
 					setList(l=>listRef.current.filter(element=>element.id!==data.id))
 				}
-				//fetch();
 			}
 		},
 		[]

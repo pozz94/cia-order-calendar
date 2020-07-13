@@ -1,65 +1,104 @@
-import React, {useState, useCallback, useEffect} from "react";
+import React, {useState, useCallback, useEffect, useRef} from "react";
 import Item from "./Components/UserItem";
 import Header from "./Components/UserTableHeader";
 import c from "./UserList.module.css";
 import _ from "lodash";
+import ShadowContext from "Contexts/shadowContext";
 
-const AdminList = props => {
-	const groupedItems = _.groupBy(props.list, "dueDate");
-	const [dayIsHidden, setHiddenDay] = useState({});
-	const cycleHide = day => () => {
-		const handled = { ...dayIsHidden };
-		handled[day] = !handled[day];
-		setHiddenDay(handled);
-	}
-	const setHidden = useCallback(day => {
-		const handled = { ...dayIsHidden };
-		handled[day] = true;
-		setHiddenDay(handled);
-	}, [dayIsHidden]);
+const RenderDays = React.memo((props) => {
+	const [done, setDone] = useState(undefined);
+	const [isHidden, setHidden] = useState(undefined);
+
+	const cycleHide = useCallback(() => {
+		setHidden(isHidden => !isHidden);
+	}, []);
 
 	useEffect(() => {
-		Object.keys(groupedItems).forEach((day) => {
-			const done = groupedItems[day].filter((data) => data.status !== "completato").length === 0;
-			if (done && dayIsHidden[day]===undefined) {
-				setHidden(day);
+		console.log("props.items changed")
+		setDone(d => {
+			const done = props.items.filter((data) => data.status !== "completato").length === 0;
+			if (done) {
+				setHidden(isHidden => {
+					if (isHidden === undefined)
+						return true;
+					return isHidden;
+				});
 			}
-		})
-	}, [dayIsHidden, groupedItems, setHidden]);
+			return done;
+		});
+		//else setHidden(undefined);
+	}, [props.items]);
 
-	const [occlusionRatios, setOcclusionRatios] = useState([]);
+	return (
+		<React.Fragment>
+			<Header
+				date={props.items[0].dueDate}
+				index={props.index}
+				occlusionRatios={props.occlusionRatios}
+				setOcclusionRatios={props.setOcclusionRatios}
+				done={done}
+				isHidden={isHidden}
+				cycleHide={cycleHide}
+			/>
+			{
+				isHidden
+					? null
+					: <tbody>
+						{props.items.map((data, index) => (
+							<Item key={data.itemKey} data={data} />
+						))}
+					</tbody>
+			}
+		</React.Fragment>
+	)
+});
+
+const UserList = props => {
+	const groupedItems = _.groupBy(props.list, "dueDate");
+	const [finishedGroupedItems, setFinishedGroupedItems] = useState({});
+	const [unfinishedGroupedItems, setUnfinishedGroupedItems] = useState({});
+	const groupedItemsRef = useRef(groupedItems);
+
+	useEffect(() => {
+		console.log("groupedItemsChanged");
+		if (JSON.stringify(groupedItems) !== JSON.stringify(groupedItemsRef.current)) {
+			groupedItemsRef.current = groupedItems;
+			const finished = {}, unfinished = {};
+			Object.keys(groupedItems).forEach((day) => {
+				const done = groupedItems[day].filter((data) => data.status !== "completato").length === 0;
+				if (done) {
+					finished[day] = groupedItems[day];
+				} else {
+					unfinished[day] = groupedItems[day];
+				}
+			});
+			setFinishedGroupedItems(finished);
+			setUnfinishedGroupedItems(unfinished);
+		}
+	}, [groupedItems]);
 
 	return (
 		<div className={c.wrapper}>
-			<table>
-				{Object.keys(groupedItems).map((day, index) => {
-					const done = groupedItems[day].filter((data) => data.status !== "completato").length === 0;
-					return (
-						<React.Fragment key={index}>
-							<Header
-								date={groupedItems[day][0].dueDate}
-								index={index}
-								occlusionRatios={occlusionRatios}
-								setOcclusionRatios={setOcclusionRatios}
-								done={done}
-								isHidden={dayIsHidden[day]}
-								cycleHide={cycleHide(day)}
-							/>
-							{
-								dayIsHidden[day]
-									? null
-									: <tbody>
-										{groupedItems[day].map((data, index) => (
-											<Item key={index} data={data} />
-										))}
-									</tbody>
-							}
-						</React.Fragment>
-					)}
-				)}
-			</table>
+			<ShadowContext>
+				<table>
+					{Object.keys(unfinishedGroupedItems).map((day, index) => 
+						(<RenderDays
+							items={unfinishedGroupedItems[day]}
+							key={unfinishedGroupedItems[day][0].itemKey}
+							index={index}
+						/>))
+					}
+					{Object.keys(finishedGroupedItems).map((day, index) =>
+						(<RenderDays
+							items={finishedGroupedItems[day]}
+							key={finishedGroupedItems[day][0].itemKey}
+							index={index}
+						/>))
+					}
+				</table>
+			</ShadowContext>
 		</div>
 	);
 };
 
-export default AdminList;
+export default UserList;

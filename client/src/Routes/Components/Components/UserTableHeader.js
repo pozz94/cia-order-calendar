@@ -1,8 +1,9 @@
-import React, {useEffect, useRef, useState} from "react"
+import React, {useEffect, useRef, useState, useContext} from "react"
 import useVisibleRatio from "hooks/useVisibleRatio"
 import c from "./UserTableHeader.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import {shadowContext} from "Contexts/shadowContext"
 
 const formatDate = date => {
 	date = new Date(date);
@@ -26,15 +27,19 @@ const formatDate = date => {
 
 const UserTableHeader = props => {
 	const [ratio, ref] = useVisibleRatio();
-	const { occlusionRatios, setOcclusionRatios, index} = props;
+	const { index } = props;
 	const [opacity, setOpacity] = useState(0);
 	const ratios = useRef([]);
 	const nextRatio = ratios.current[index + 1] === undefined ? 1 : ratios.current[index + 1];
 	const nextRatioLT1 = nextRatio < 1 ? 0 : 1;
 
+	const [ctx, setCtx] = useContext(shadowContext).contextHook;
+	
+	console.log(ctx);
+
 	let isLast = true;
-	for (let i = index + 1; i < occlusionRatios.length; i++){
-		if (occlusionRatios[i]===0)
+	for (let i = index + 1; i < ctx.length; i++){
+		if (ctx[i]===0)
 		{
 			isLast = false;
 		}
@@ -46,20 +51,23 @@ const UserTableHeader = props => {
 	}, [ratio, index, nextRatioLT1])
 
 	useEffect(() => {
-		ratios.current = [...occlusionRatios];
-	}, [occlusionRatios])
+		ratios.current = [...ctx];
+	}, [ctx])
+
 	useEffect(() => {
-		const currentRatios=[...ratios.current]
-		currentRatios[index] = ratio;
-		setOcclusionRatios(currentRatios);
-	}, [ratio, opacity, index, setOcclusionRatios]);
+		setCtx(c => {
+			const currentRatios=[...c]
+			currentRatios[index] = ratio;
+			return currentRatios;
+		});
+	}, [ratio, opacity, index, setCtx]);
 	
 	return (
 		<thead ref={ref} className={c.header}>
 			<tr className={c.groupLabel}>
 				<th colSpan="4">
 					{props.done
-						? "Completati per"
+						? "Materiale completato per"
 						: "In consegna"} {
 						formatDate(props.date)
 					}
