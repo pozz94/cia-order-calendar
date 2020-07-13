@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState, useContext} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import useVisibleRatio from "hooks/useVisibleRatio"
 import c from "./UserTableHeader.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import {shadowContext} from "Contexts/shadowContext"
+import {useShadowCtx} from "Contexts/shadowContext"
 
 const formatDate = date => {
 	date = new Date(date);
@@ -33,9 +33,7 @@ const UserTableHeader = props => {
 	const nextRatio = ratios.current[index + 1] === undefined ? 1 : ratios.current[index + 1];
 	const nextRatioLT1 = nextRatio < 1 ? 0 : 1;
 
-	const [ctx, setCtx] = useContext(shadowContext).contextHook;
-	
-	console.log(ctx);
+	const [ctx, setCtx] = useShadowCtx();
 
 	let isLast = true;
 	for (let i = index + 1; i < ctx.length; i++){
